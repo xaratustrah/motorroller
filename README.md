@@ -30,6 +30,11 @@ pip3 uninstall motorroller
 
 
 
+
+#### Hardware upgrade
+
+Use of end switches and SPI expander
+
 ## Licensing
 
 Please see the file [LICENSE.md](./LICENSE.md) for further information about how the content is licensed.
