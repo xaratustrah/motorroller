@@ -14,6 +14,11 @@ if os.name == 'posix' and os.uname().machine == 'armv7l':
     except RuntimeError:
         print("""Error importing Raspberry Pi libraries!""")
 
+
+# constants
+
+MOTOR_SPEED = 500
+
 # pin assignment
 
 clw = 16
@@ -39,12 +44,10 @@ gpio.setup(brk3, gpio.OUT)
 gpio.setup(motor_select, gpio.OUT)
 gpio.setup(driver_select, gpio.OUT)
 
-# setup SPI
-
 # setup PWM
-clw_pwm = gpio.PWM(clw, 1000)
+clw_pwm = gpio.PWM(clw, MOTOR_SPEED)
+ccw_pwm = gpio.PWM(ccw, MOTOR_SPEED)
 clw_pwm.ChangeDutyCycle(50)
-ccw_pwm = gpio.PWM(ccw, 1000)
 ccw_pwm.ChangeDutyCycle(50)
 
 # init SPI
@@ -52,7 +55,7 @@ spi = spidev.SpiDev()
 spi.open(0, 0)
 spi.max_speed_hz = 5000
 
-def init_gpio():
+def reinit_gpio():
     # Initial values
     gpio.output(clw, 0)
     gpio.output(ccw, 0)
@@ -113,19 +116,20 @@ def move_mot1(duration, direction):
         clw_pwm.stop()
         
     gpio.output(brk1, 0)
-    print('pot1 value:', read_pot1())
+    print('pot1 value: ', read_pot1())
 
 
 def main():
     
-    init_gpio()
+    reinit_gpio()
+    
     move_mot0(2, 0)
     move_mot0(2, 1)
 
     move_mot1(2, 0)
     move_mot1(2, 1)
 
-    init_gpio()
+    reinit_gpio()
     spi.close()
 
 # -----
