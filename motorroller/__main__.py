@@ -120,7 +120,7 @@ def process_command(cmd):
 
     channel = int(first_char)
     
-    direction = 'clw' if second_char in {'i', 'I'} else 'clw'
+    direction = 'clw' if second_char in {'i', 'I'} else 'ccw'
 
     # Try to cast duration to both integer and float
     if len(cmd) == 3:
@@ -148,7 +148,7 @@ def main():
         try:
             cmmd = input ('Enter command or ctrl-C to abort-->')
             channel, direction, duration = process_command(cmmd)
-            print(f'Moving motor: {channel}, {direction}, {duration}')
+            print(f'Moving motor {channel}, direction {direction} for {duration} seconds.')
             move_motor(channel, direction, duration)
             print(read_poti(channel))
         except(EOFError, KeyboardInterrupt):
