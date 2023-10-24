@@ -24,7 +24,7 @@ pip3 uninstall motorroller
 
 ### Running modes
 
-Motoroller can be run in three different modes.
+Motoroller can be run in three different modes. The switch `--speed` is reserved for setting the rotation speed.
 
 #### Interactive mode
 
