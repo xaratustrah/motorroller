@@ -17,7 +17,6 @@ if os.name == 'posix' and os.uname().machine == 'armv7l':
     except RuntimeError:
         print("""Error importing Raspberry Pi libraries!""")
 
-
 # constants
 
 MOTOR_SPEED = 500
@@ -121,19 +120,18 @@ class Motorroller:
         self.gpio_reset()    
 
     def process_command(self, cmd):
-        try:
-            first_char = int(cmd[0])
-        except ValueError:
-            raise ValueError('Command format incorrect. Format is XDY, where X is channel numnber 0, 1, 2 and 3, D is either I for in or O for out and Y is the duration in seconds (int or float)\n')
-            
-        second_char = cmd[1]
-
         valid_channels = {0, 1, 2, 3}
         valid_directions = {'i', 'I', 'o', 'O'}
 
-        if first_char not in valid_channels or second_char not in valid_directions:
+        try:
+            first_char = int(cmd[0])
+            second_char = cmd[1]
+            
+            assert first_char in valid_channels
+            assert second_char in valid_directions
+        except (AssertionError, ValueError):
             raise ValueError('Command format incorrect. Format is XDY, where X is channel numnber 0, 1, 2 and 3, D is either I for in or O for out and Y is the duration in seconds (int or float)\n')
-
+            
         channel = int(first_char)
         
         direction = 'clw' if second_char in {'i', 'I'} else 'ccw'
