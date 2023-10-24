@@ -91,7 +91,7 @@ def move_motor(channel, direction, duration):
     gpio.output(MOTOR_SELECT, motor_select)
     gpio.output(channel, 1)
 
-    if direction = 'ccw':
+    if direction == 'ccw':
         ccw_pwm.start(50)
         sleep(duration)
         ccw_pwm.stop()
