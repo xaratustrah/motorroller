@@ -155,7 +155,6 @@ class Motorroller:
 #-------
 
 def start_interactive_mode():
-    print('Motor controller')
     motorroller = Motorroller()
     
     while True:
@@ -177,8 +176,13 @@ def start_interactive_mode():
     exit()
 
 def start_single_mode(cmmd):
-    print(cmmd)
-
+    motorroller = Motorroller()
+    channel, direction, duration = motorroller.process_command(cmmd)
+    print(f'Moving motor {channel}, direction {direction} for {duration} seconds.')
+    motorroller.move_motor(channel, direction, duration)
+    print(f'Poti is: {motorroller.read_poti(channel)}')
+    motorroller.closedown()
+    
 def main():
     parser = argparse.ArgumentParser(prog='motorroller')
     parser.add_argument('--single', nargs=1, type=str,
@@ -188,7 +192,7 @@ def main():
     args = parser.parse_args()
     # check the first switches
     if args.single:
-        start_single_mode(args.single)
+        start_single_mode(args.single[0])
     else:
         start_interactive_mode()
 
