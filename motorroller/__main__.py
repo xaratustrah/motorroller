@@ -24,6 +24,7 @@ MOTOR_SPEED = 500
 
 CLW = 16
 CCW = 18
+
 BRK0 = 40
 BRK2 = 35
 BRK1 = 37
@@ -34,43 +35,47 @@ brk_list = [BRK0, BRK1, BRK2, BRK3]
 MOTOR_SELECT = 36
 DRIVER_SELECT = 38
 
-# gpio Setup
 
-gpio.setwarnings(False)
-gpio.setmode(gpio.BOARD) # Header pin number system
+def gpio_setup():
+    # gpio Setup
 
-gpio.setup(CLW, gpio.OUT)
-gpio.setup(CCW, gpio.OUT)
-gpio.setup(BRK0, gpio.OUT)
-gpio.setup(BRK1, gpio.OUT)
-gpio.setup(BRK2, gpio.OUT)
-gpio.setup(BRK3, gpio.OUT)
-gpio.setup(MOTOR_SELECT, gpio.OUT)
-gpio.setup(DRIVER_SELECT, gpio.OUT)
+    gpio.setwarnings(False)
+    gpio.setmode(gpio.BOARD) # Header pin number system
 
-# setup PWM
-clw_pwm = gpio.PWM(CLW, MOTOR_SPEED)
-ccw_pwm = gpio.PWM(CCW, MOTOR_SPEED)
-clw_pwm.ChangeDutyCycle(50)
-ccw_pwm.ChangeDutyCycle(50)
+    gpio.setup(CLW, gpio.OUT)
+    gpio.setup(CCW, gpio.OUT)
+    gpio.setup(BRK0, gpio.OUT)
+    gpio.setup(BRK1, gpio.OUT)
+    gpio.setup(BRK2, gpio.OUT)
+    gpio.setup(BRK3, gpio.OUT)
+    gpio.setup(MOTOR_SELECT, gpio.OUT)
+    gpio.setup(DRIVER_SELECT, gpio.OUT)
 
-# init SPI
-spi = spidev.SpiDev()
-spi.open(0, 0)
-spi.max_speed_hz = 5000
+    # setup PWM
+    clw_pwm = gpio.PWM(CLW, MOTOR_SPEED)
+    ccw_pwm = gpio.PWM(CCW, MOTOR_SPEED)
+    clw_pwm.ChangeDutyCycle(50)
+    ccw_pwm.ChangeDutyCycle(50)
 
-def reinit_gpio():
+def init_spi():
+    # init SPI
+    spi = spidev.SpiDev()
+    spi.open(0, 0)
+    spi.max_speed_hz = 5000
+    return spi
+
+def reset_gpio():
     # Initial values
-    gpio.output(CLW, 0)
-    gpio.output(CCW, 0)
+    gpio.output(CLW, GPIB.LOW)
+    gpio.output(CCW, GPIB.LOW)
 
-    gpio.output(BRK0, 0)
-    gpio.output(BRK1, 0)
-    gpio.output(BRK2, 0)
-    gpio.output(BRK3, 0)
+    gpio.output(BRK0, GPIB.LOW)
+    gpio.output(BRK1, GPIB.LOW)
+    gpio.output(BRK2, GPIB.LOW)
+    gpio.output(BRK3, GPIB.LOW)
 
-    gpio.output(MOTOR_SELECT, 0)
-    gpio.output(DRIVER_SELECT, 0)
+    gpio.output(MOTOR_SELECT, GPIB.LOW)
+    gpio.output(DRIVER_SELECT, GPIB.LOW)
 
 def read_poti(channel):
     if channel not in {0, 1, 2, 3}:
@@ -144,9 +149,9 @@ def process_command(cmd):
 
 def main():
     print('Motor controller')
-    reinit_gpio()
-    move_motor(1, 'clw', 1)
-    exit()
+    spi = spi_init()
+    gpio_setup()
+    gpio_reset()
     while True:
         try:
             cmmd = input ('Enter command or ctrl-C to abort-->')
@@ -157,7 +162,7 @@ def main():
         
         except(EOFError, KeyboardInterrupt):
             spi.close()
-            reinit_gpio()    
+            gpio_reset()    
             print('\nUser input cancelled. Aborting...')            
             exit()
         except(ValueError) as e:
