@@ -188,7 +188,7 @@ def main():
     args = parser.parse_args()
     # check the first switches
     if args.single:
-        start_single_mode(single)
+        start_single_mode(args.single)
     else:
         start_interactive_mode()
 
