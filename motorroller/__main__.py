@@ -189,7 +189,7 @@ def main():
     single = int(args.single[0])
     if single:
         start_single_mode(single)
-    else
+    else:
         start_interactive_mode()
 
 
