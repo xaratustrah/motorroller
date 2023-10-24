@@ -94,6 +94,9 @@ class Motorroller:
             value = 1
         return value
 
+    def read_all_potis(self):
+        return [self.read_poti(0), self.read_poti(1), self.read_poti(2),self.read_poti(3)]
+            
     def move_motor(self, channel, direction, duration):
 
         driver_select, motor_select = (0, 0) if channel == 0 else (0, 1) if channel == 1 else (1, 0) if channel == 2 else (1, 1) if channel == 3 else (None, None)
@@ -163,7 +166,7 @@ def start_interactive_mode():
             channel, direction, duration = motorroller.process_command(cmmd)
             print(f'Moving motor {channel}, direction {direction} for {duration} seconds.')
             motorroller.move_motor(channel, direction, duration)
-            print(f'Poti is: {motorroller.read_poti(channel)}')
+            print(f'Poti values: {motorroller.read_all_potis()}')
         
         except(EOFError, KeyboardInterrupt):
             print('\nUser input cancelled. Aborting...')
@@ -179,7 +182,7 @@ def start_single_mode(cmmd):
     channel, direction, duration = motorroller.process_command(cmmd)
     print(f'Moving motor {channel}, direction {direction} for {duration} seconds.')
     motorroller.move_motor(channel, direction, duration)
-    print(f'Poti is: {motorroller.read_poti(channel)}')
+    print(f'Poti values: {motorroller.read_all_potis()}')
     motorroller.closedown()
 
 def start_server_mode():
