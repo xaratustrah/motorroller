@@ -76,7 +76,7 @@ def gpio_reset():
     gpio.output(MOTOR_SELECT, gpio.LOW)
     gpio.output(DRIVER_SELECT, gpio.LOW)
 
-def read_poti(channel):
+def read_poti(channel, spi):
     if channel not in {0, 1, 2, 3}:
         raise ValueError('Channel should be either 0, 1, 2 or 3')
     msg = 0x00 if channel == 0 else 0x40 if channel == 1 else 0x80 if channel == 2 else 0xC0
@@ -156,7 +156,7 @@ def main():
             channel, direction, duration = process_command(cmmd)
             print(f'Moving motor {channel}, direction {direction} for {duration} seconds.')
             move_motor(channel, direction, duration)
-            print(f'Poti is: {read_poti(channel)}')
+            print(f'Poti is: {read_poti(channel, spi)}')
         
         except(EOFError, KeyboardInterrupt):
             spi.close()
