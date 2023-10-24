@@ -89,7 +89,7 @@ def move_motor(channel, direction, duration):
     
     gpio.output(DRIVER_SELECT, driver_select)
     gpio.output(MOTOR_SELECT, motor_select)
-    gpio.output(channel, 1)
+    gpio.output(brk_list[channel], 1)
 
     if direction == 'ccw':
         ccw_pwm.start(50)
@@ -101,7 +101,7 @@ def move_motor(channel, direction, duration):
         clw_pwm.stop()
     
     # break off
-    gpio.output(channel, 0)
+    gpio.output(brk_list[channel], 0)
     
     
 def process_command(cmd):
