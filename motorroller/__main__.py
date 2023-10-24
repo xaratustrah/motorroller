@@ -73,7 +73,7 @@ def reinit_gpio():
 
 def read_poti(channel):
     if channel not in {0, 1, 2, 3}:
-        raise ValueError('Channel should be 0-3')
+        raise ValueError('Channel should be either 0, 1, 2 or 3')
     msg = 0x00 if channel == 0 else 0x40 if channel == 1 else 0x80 if channel == 2 else 0xC0
     
     resp = spi.xfer([0x06, msg, 0x00])
@@ -86,7 +86,7 @@ def read_poti(channel):
 def move_motor(channel, direction, duration):
 
     motor_select, driver_select = (0, 0) if channel == 0 else (0, 1) if channel == 1 else (1, 0) if channel == 2 else (1, 1) if channel == 3 else (None, None)
-    
+    print(motor_select, driver_select)
     gpio.output(DRIVER_SELECT, driver_select)
     gpio.output(MOTOR_SELECT, motor_select)
     gpio.output(brk_list[channel], 1)
