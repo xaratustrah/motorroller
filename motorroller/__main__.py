@@ -149,7 +149,7 @@ def main():
         try:
             cmmd = input ('Enter command or ctrl-C to abort-->')
             channel, direction, duration = process_command(cmmd)
-            print('Moving motor:' + channel + direction + duration)
+            print(f'Moving motor: {channel}, {direction}, {duration}')
             move_motor(channel, direction, duration)
             print(read_poti(channel))
         except(EOFError, KeyboardInterrupt):
