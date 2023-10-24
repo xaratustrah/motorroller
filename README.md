@@ -38,7 +38,7 @@ motoroller
 Use the command directly in the command prompt:
 
 ```
-motoroller --single 0i1
+motoroller --command 0i1
 ```
 
 #### Client / Server mode
