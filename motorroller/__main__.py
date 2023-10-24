@@ -173,7 +173,6 @@ def start_interactive_mode():
             print(e)
 
     motorroller.closedown()
-    exit()
 
 def start_single_mode(cmmd):
     motorroller = Motorroller()
@@ -182,20 +181,29 @@ def start_single_mode(cmmd):
     motorroller.move_motor(channel, direction, duration)
     print(f'Poti is: {motorroller.read_poti(channel)}')
     motorroller.closedown()
+
+def start_server_mode():
+    print('Client / Server mode not implemented yet.')
     
+#-------
+
 def main():
     parser = argparse.ArgumentParser(prog='motorroller')
     parser.add_argument('--single', nargs=1, type=str,
                         help='Single command', default='')
+    parser.add_argument('--server', action=argparse.BooleanOptionalAction)
     parser.add_argument('--version', action='version', version=__version__)
 
     args = parser.parse_args()
-    # check the first switches
+
     if args.single:
         start_single_mode(args.single[0])
+    elif args.server:
+        start_server_mode()
     else:
         start_interactive_mode()
-
+        
+    exit()
 
 # -----
 if __name__ == '__main__':
