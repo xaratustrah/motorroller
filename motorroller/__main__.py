@@ -66,16 +66,16 @@ def gpio_setup():
 
 def gpio_reset():
     # Initial values
-    gpio.output(CLW, GPIB.LOW)
-    gpio.output(CCW, GPIB.LOW)
+    gpio.output(CLW, GPIO.LOW)
+    gpio.output(CCW, GPIO.LOW)
 
-    gpio.output(BRK0, GPIB.LOW)
-    gpio.output(BRK1, GPIB.LOW)
-    gpio.output(BRK2, GPIB.LOW)
-    gpio.output(BRK3, GPIB.LOW)
+    gpio.output(BRK0, GPIO.LOW)
+    gpio.output(BRK1, GPIO.LOW)
+    gpio.output(BRK2, GPIO.LOW)
+    gpio.output(BRK3, GPIO.LOW)
 
-    gpio.output(MOTOR_SELECT, GPIB.LOW)
-    gpio.output(DRIVER_SELECT, GPIB.LOW)
+    gpio.output(MOTOR_SELECT, GPIO.LOW)
+    gpio.output(DRIVER_SELECT, GPIO.LOW)
 
 def read_poti(channel):
     if channel not in {0, 1, 2, 3}:
