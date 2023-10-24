@@ -166,11 +166,14 @@ def main():
             print(f'Poti is: {motorroller.read_poti(channel)}')
         
         except(EOFError, KeyboardInterrupt):
-            motorroller.closedown()
-            print('\nUser input cancelled. Aborting...')            
-            exit()
+            print('\nUser input cancelled. Aborting...')
+            break
+        
         except(ValueError) as e:
             print(e)
+
+    motorroller.closedown()
+    exit()
 
 # -----
 if __name__ == '__main__':
