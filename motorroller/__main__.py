@@ -35,6 +35,19 @@ brk_list = [BRK0, BRK1, BRK2, BRK3]
 MOTOR_SELECT = 36
 DRIVER_SELECT = 38
 
+# gpio Setup
+gpio.setwarnings(False)
+gpio.setmode(gpio.BOARD) # Header pin number system
+
+gpio.setup(CLW, gpio.OUT)
+gpio.setup(CCW, gpio.OUT)
+gpio.setup(BRK0, gpio.OUT)
+gpio.setup(BRK1, gpio.OUT)
+gpio.setup(BRK2, gpio.OUT)
+gpio.setup(BRK3, gpio.OUT)
+gpio.setup(MOTOR_SELECT, gpio.OUT)
+gpio.setup(DRIVER_SELECT, gpio.OUT)
+
 # setup PWM
 clw_pwm = gpio.PWM(CLW, MOTOR_SPEED)
 ccw_pwm = gpio.PWM(CCW, MOTOR_SPEED)
@@ -49,21 +62,6 @@ def spi_init():
     spi.max_speed_hz = 5000
     return spi
 
-
-def gpio_setup():
-    # gpio Setup
-
-    gpio.setwarnings(False)
-    gpio.setmode(gpio.BOARD) # Header pin number system
-
-    gpio.setup(CLW, gpio.OUT)
-    gpio.setup(CCW, gpio.OUT)
-    gpio.setup(BRK0, gpio.OUT)
-    gpio.setup(BRK1, gpio.OUT)
-    gpio.setup(BRK2, gpio.OUT)
-    gpio.setup(BRK3, gpio.OUT)
-    gpio.setup(MOTOR_SELECT, gpio.OUT)
-    gpio.setup(DRIVER_SELECT, gpio.OUT)
 
 def gpio_reset():
     # Initial values
@@ -151,7 +149,6 @@ def process_command(cmd):
 def main():
     print('Motor controller')
     spi = spi_init()
-    gpio_setup()
     gpio_reset()
     while True:
         try:
