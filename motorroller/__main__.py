@@ -6,6 +6,7 @@ Motorroller - Open hardware open software stepper motor controller
 
 from time import sleep
 import readline
+import argparse
 import os
 
 if os.name == 'posix' and os.uname().machine == 'armv7l':
@@ -95,7 +96,6 @@ class Motorroller:
     def move_motor(self, channel, direction, duration):
 
         driver_select, motor_select = (0, 0) if channel == 0 else (0, 1) if channel == 1 else (1, 0) if channel == 2 else (1, 1) if channel == 3 else (None, None)
-        print(motor_select, driver_select)
         gpio.output(DRIVER_SELECT, driver_select)
         gpio.output(MOTOR_SELECT, motor_select)
         gpio.output(self.brk_list[channel], 1)
@@ -153,7 +153,7 @@ class Motorroller:
 
 #-------
 
-def main():
+def start_interactive_mode():
     print('Motor controller')
     motorroller = Motorroller()
     
@@ -174,6 +174,24 @@ def main():
 
     motorroller.closedown()
     exit()
+
+def start_single_mode(cmmd):
+    print(cmmd)
+
+def main():
+    parser = argparse.ArgumentParser(prog='motorroller')
+    parser.add_argument('--single', nargs=1, type=str,
+                        help='Single command', default='')
+    parser.add_argument('--version', action='version', version=__version__)
+
+    args = parser.parse_args()
+    # check the first switches
+    single = int(args.single[0])
+    if single:
+        start_single_mode(single)
+    else
+        start_interactive_mode()
+
 
 # -----
 if __name__ == '__main__':
