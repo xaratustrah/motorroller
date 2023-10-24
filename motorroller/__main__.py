@@ -91,8 +91,7 @@ def move_motor(channel, direction, duration):
     gpio.output(MOTOR_SELECT, motor_select)
     gpio.output(channel, 1)
 
-    # zero for clockwise
-    if not direction:
+    if direction = 'ccw':
         ccw_pwm.start(50)
         sleep(duration)
         ccw_pwm.stop()
@@ -121,7 +120,7 @@ def process_command(cmd):
 
     channel = int(first_char)
     
-    direction = 'CLW' if second_char in {'i', 'I'} else 'CCW'
+    direction = 'clw' if second_char in {'i', 'I'} else 'clw'
 
     # Try to cast duration to both integer and float
     if len(cmd) == 3:
