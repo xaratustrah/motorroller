@@ -94,7 +94,7 @@ class Motorroller:
 
     def move_motor(self, channel, direction, duration):
 
-        motor_select, driver_select = (0, 0) if channel == 0 else (0, 1) if channel == 1 else (1, 0) if channel == 2 else (1, 1) if channel == 3 else (None, None)
+        driver_select, motor_select = (0, 0) if channel == 0 else (0, 1) if channel == 1 else (1, 0) if channel == 2 else (1, 1) if channel == 3 else (None, None)
         print(motor_select, driver_select)
         gpio.output(DRIVER_SELECT, driver_select)
         gpio.output(MOTOR_SELECT, motor_select)
