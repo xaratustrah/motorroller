@@ -101,13 +101,13 @@ class Motorroller:
         gpio.output(self.brk_list[channel], 1)
 
         if direction == 'ccw':
-            ccw_pwm.start(50)
+            self.ccw_pwm.start(50)
             sleep(duration)
-            ccw_pwm.stop()
+            self.ccw_pwm.stop()
         else:
-            clw_pwm.start(50)
+            self.clw_pwm.start(50)
             sleep(duration)
-            clw_pwm.stop()
+            self.clw_pwm.stop()
         
         # break off
         gpio.output(self.brk_list[channel], 0)
