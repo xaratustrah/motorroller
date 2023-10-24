@@ -150,7 +150,8 @@ def main():
             channel, direction, duration = process_command(cmmd)
             print(f'Moving motor {channel}, direction {direction} for {duration} seconds.')
             move_motor(channel, direction, duration)
-            print(read_poti(channel))
+            print(f'Poti is: {read_poti(channel)}')
+        
         except(EOFError, KeyboardInterrupt):
             spi.close()
             reinit_gpio()    
