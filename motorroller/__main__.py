@@ -5,6 +5,7 @@ Motorroller - Open hardware open software stepper motor controller
 """
 
 from time import sleep
+import readline
 import os
 
 if os.name == 'posix' and os.uname().machine == 'armv7l':
