@@ -145,6 +145,8 @@ def process_command(cmd):
 def main():
     print('Motor controller')
     reinit_gpio()
+    move_motor(1, 'clw', 1)
+    exit()
     while True:
         try:
             cmmd = input ('Enter command or ctrl-C to abort-->')
