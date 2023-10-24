@@ -148,7 +148,8 @@ def main():
     while True:
         try:
             cmmd = input ('Enter command or ctrl-C to abort-->')
-            print(process_command(cmmd))
+            move_motor(process_command(cmmd))
+            print(read_poti(channel))
         except(EOFError, KeyboardInterrupt):
             spi.close()
             reinit_gpio()    
