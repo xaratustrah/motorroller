@@ -35,6 +35,13 @@ brk_list = [BRK0, BRK1, BRK2, BRK3]
 MOTOR_SELECT = 36
 DRIVER_SELECT = 38
 
+# setup PWM
+clw_pwm = gpio.PWM(CLW, MOTOR_SPEED)
+ccw_pwm = gpio.PWM(CCW, MOTOR_SPEED)
+clw_pwm.ChangeDutyCycle(50)
+ccw_pwm.ChangeDutyCycle(50)
+
+
 def spi_init():
     # init SPI
     spi = spidev.SpiDev()
@@ -57,12 +64,6 @@ def gpio_setup():
     gpio.setup(BRK3, gpio.OUT)
     gpio.setup(MOTOR_SELECT, gpio.OUT)
     gpio.setup(DRIVER_SELECT, gpio.OUT)
-
-    # setup PWM
-    clw_pwm = gpio.PWM(CLW, MOTOR_SPEED)
-    ccw_pwm = gpio.PWM(CCW, MOTOR_SPEED)
-    clw_pwm.ChangeDutyCycle(50)
-    ccw_pwm.ChangeDutyCycle(50)
 
 def gpio_reset():
     # Initial values
