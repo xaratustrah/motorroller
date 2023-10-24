@@ -8,6 +8,7 @@ from time import sleep
 import readline
 import argparse
 import os
+from .version import __version__
 
 if os.name == 'posix' and os.uname().machine == 'armv7l':
     try:
