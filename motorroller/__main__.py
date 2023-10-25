@@ -93,7 +93,7 @@ class Motorroller:
 
         resp = self.spi.xfer([0x06, msg, 0x00])
         value = (resp[1] << 8) + resp[2]
-        value = int(int(value) * 2 / 3)
+        value = int(value)
         if value <= 0:
             value = 1
         return value

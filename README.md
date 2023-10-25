@@ -54,11 +54,9 @@ Command format is XDY, where X is channel numnber 0, 1, 2 and 3, D is either I f
 
 #### Board and Schematics
 
-![Motoroller](https://raw.githubusercontent.com/xaratustrah/motorroller/master/rsrc/box.jpg)
+![Motoroller](https://raw.githubusercontent.com/xaratustrah/motorroller/master/rsrc/motorroller_case.png)
 
 The schematics has been creating using [KiCAD](https://www.kicad.org/). The schematics file is included in the project. A PDF version of the schematics (connection plan) can be found [here](https://github.com/xaratustrah/motorroller/blob/main/rsrc/motorroller.kicad_sch.pdf). Needed parts are listed also in an spread sheet document [here](https://github.com/xaratustrah/motorroller/blob/main/rsrc/motorroller_part_list.ods).
-
-Please note that the driver has direct opto coupler inputs, whereas the relay board has optocouplers that are already pulled up to 5V on one side.
 
 #### Pin configurations
 
@@ -133,6 +131,10 @@ For the next revision, the relay order for the BRK signals could be made more sy
   
 This is a nice to have option, just add two level shofters for the CCW and CLW signals. In principle, a level shifter can also replace the darlington array IC ULN2003A , which is a bit of an overkill for the current purpose.
 
+#### Additional hints
+Please note that the driver has direct opto coupler inputs, whereas the relay board has optocouplers that are already pulled up to 5V on one side.
+
+Also please note that for the crimp tool you need to set level 8 for 0.75mm<sup>2></sup> which are the motor cables, and level 5 for 0.14mm<sup>2></sup> cables, which are the end switch and potentiometer cables.
 
 ## Licensing
 
