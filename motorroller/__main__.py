@@ -37,7 +37,6 @@ DRIVER_SELECT = 38
 class Motorroller:
     def __init__(self, motor_speed):
         self.motor_speed = motor_speed
-        print(f'motor speed {self.motor_speed}')
         self.brk_list = [BRK0, BRK1, BRK2, BRK3]
         self.spi_init()
         self.gpio_setup()

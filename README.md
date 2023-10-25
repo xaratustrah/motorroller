@@ -134,7 +134,7 @@ This is a nice to have option, just add two level shofters for the CCW and CLW s
 #### Additional hints
 Please note that the driver has direct opto coupler inputs, whereas the relay board has optocouplers that are already pulled up to 5V on one side.
 
-Also please note that for the crimp tool you need to set level 8 for 0.75mm<sup>2></sup> which are the motor cables, and level 5 for 0.14mm<sup>2></sup> cables, which are the end switch and potentiometer cables.
+Also please note that for the crimp tool you need to set level 8 for 0.75mm<sup>2</sup> which are the motor cables, and level 5 for 0.14mm<sup>2</sup> cables, which are the end switch and potentiometer cables.
 
 ## Licensing
 
