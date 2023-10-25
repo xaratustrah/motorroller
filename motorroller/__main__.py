@@ -36,11 +36,11 @@ DRIVER_SELECT = 38
 
 class Motorroller:
     def __init__(self, motor_speed):
+        self.motor_speed = motor_speed
         self.brk_list = [BRK0, BRK1, BRK2, BRK3]
         self.spi_init()
         self.gpio_setup()
         self.gpio_reset()
-        self.motor_speed = motor_speed
 
     def gpio_setup(self):
         # gpio Setup
@@ -95,7 +95,7 @@ class Motorroller:
         value = (resp[1] << 8) + resp[2]
         value = int(value)
         if value <= 0:
-            value = 1
+            value = 0
         return value
 
     def read_all_potis(self):
