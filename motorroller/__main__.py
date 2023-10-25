@@ -94,8 +94,13 @@ class Motorroller:
         resp = self.spi.xfer([0x06, msg, 0x00])
         value = (resp[1] << 8) + resp[2]
         value = int(value)
+        
+        # clip value
         if value <= 0:
             value = 0
+        elif value > 4095:
+            value = 4095
+        
         return value
 
     def read_all_potis(self):
