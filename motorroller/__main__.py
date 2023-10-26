@@ -7,7 +7,7 @@ Motorroller - Open hardware open software stepper motor controller
 from time import sleep
 import readline
 import argparse
-import os
+import os, sys
 from loguru import logger
 from .version import __version__
 
