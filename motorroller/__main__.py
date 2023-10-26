@@ -149,7 +149,7 @@ class Motorroller:
         self.gpio_reset()
 
     def process_command(self, cmd):
-        valid_commands = {0, 1, 2, 3, 7, 8, 9}
+        valid_channels = {0, 1, 2, 3, 7, 8, 9}
         valid_directions = {"i", "I", "o", "O"}
 
         try:
@@ -158,7 +158,7 @@ class Motorroller:
             first_char = int(cmd[0])
             second_char = cmd[1]
 
-            assert first_char in valid_commands
+            assert first_char in valid_channels
             assert second_char in valid_directions
             
         except (AssertionError, ValueError):
@@ -201,32 +201,32 @@ class Motorroller:
             except ValueError:
                 raise ValueError("Could not cast the string to a number.")
 
-        return command, direction, duration
+        return channel, direction, duration
 
 
     def process_action(self, command_str):
-        command, direction, duration = self.process_command(command_str)
-        if command in {0, 1, 2, 3}:
+        channel, direction, duration = self.process_command(command_str)
+        if channel in {0, 1, 2, 3}:
             print(
-                f"Moving motor {command}, direction {direction} for {duration} seconds."
+                f"Moving motor {channel}, direction {direction} for {duration} seconds."
             )
             self.move_motor(channel, direction, duration)
             print(f"Poti values: {self.read_all_potis()}")
-        elif command == 7:
+        elif channel == 7:
             print(
                 f"Moving motors 0 and 1, direction {direction} for {duration} seconds."
             )
             self.move_motor(0, direction, duration)
             self.move_motor(1, direction, duration)
             print(f"Poti values: {self.read_all_potis()}")
-        elif command == 8:
+        elif channel == 8:
             print(
                 f"Moving motors 2 and 3, direction {direction} for {duration} seconds."
             )
             self.move_motor(2, direction, duration)
             self.move_motor(3, direction, duration)
             print(f"Poti values: {self.read_all_potis()}")
-        elif command == 9:
+        elif channel == 9:
             print(f"Poti values: {self.read_all_potis()}")
                         
 
