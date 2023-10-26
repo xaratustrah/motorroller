@@ -208,27 +208,27 @@ class Motorroller:
     def process_action(self, command_str):
         channel, direction, duration = self.process_command(command_str)
         if channel in {0, 1, 2, 3}:
-            print(
+            logger.info(
                 f'Moving motor {channel}, direction {direction} for {duration} seconds.'
             )
             self.move_motor(channel, direction, duration)
-            print(f'Poti values: {self.read_all_potis()}')
+            logger.info(f'Poti values: {self.read_all_potis()}')
         elif channel == 7:
-            print(
+            logger.info(
                 f'Moving motors 0 and 1, direction {direction} for {duration} seconds.'
             )
             self.move_motor(0, direction, duration)
             self.move_motor(1, direction, duration)
-            print(f'Poti values: {self.read_all_potis()}')
+            logger.info(f'Poti values: {self.read_all_potis()}')
         elif channel == 8:
-            print(
+            logger.info(
                 f'Moving motors 2 and 3, direction {direction} for {duration} seconds.'
             )
             self.move_motor(2, direction, duration)
             self.move_motor(3, direction, duration)
-            print(f'Poti values: {self.read_all_potis()}')
+            logger.info(f'Poti values: {self.read_all_potis()}')
         elif channel == 9:
-            print(f'Poti values: {self.read_all_potis()}')
+            logger.info(f'Poti values: {self.read_all_potis()}')
                         
 
 # -------
@@ -293,12 +293,13 @@ def main():
     args = parser.parse_args()
     motorroller = Motorroller(args.speed)
     
-    logger.remove()
+    logger.remove(0)
     logger.add(sys.stdout, level='INFO')
     
     if args.log:
         outfilename = args.log[0]
-        logger.add(f'{outfilename}.log', level='INFO')
+        # all levels
+        logger.add(f'{outfilename}.log')
 
     if args.command:
         logger.info('Running single command.')
