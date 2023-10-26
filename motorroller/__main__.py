@@ -150,19 +150,17 @@ class Motorroller:
 
     def process_command(self, cmd):
         valid_channels = {0, 1, 2, 3}
-        valid_directions = {'i', 'I', 'o', 'O'}
+        valid_commands = {'i', 'I', 'o', 'O'}
 
         try:
             first_char = int(cmd[0])
             second_char = cmd[1]
 
             assert first_char in valid_channels
-            assert second_char in valid_directions
+            assert second_char in valid_commands
         except (AssertionError, ValueError):
             raise ValueError(
-                '''Command format incorrect. Format is XDY, where X is channel
-                numnber 0, 1, 2 and 3, D is either I for in or O for out and Y
-                is the duration in seconds (int or float)\n
+                '''Command format incorrect. Format is XDY, where X is channel numnber 0, 1, 2 and 3, D is either I for in or O for out and Y is the duration in seconds (int or float)\n
                 '''
             )
 
