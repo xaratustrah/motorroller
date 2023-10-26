@@ -1,8 +1,8 @@
-'''
+"""
 Motorroller - Open hardware open software stepper motor controller
 
 2023 xaratustra@github
-'''
+"""
 
 from time import sleep
 import readline
@@ -10,14 +10,14 @@ import argparse
 import os
 from .version import __version__
 
-if os.name == 'posix' and os.uname().machine == 'armv7l':
+if os.name == "posix" and os.uname().machine == "armv7l":
     try:
         import RPi.GPIO as gpio
         import spidev
     except RuntimeError:
-        print('''Error importing Raspberry Pi libraries!''')
+        print("""Error importing Raspberry Pi libraries!""")
 else:
-    print('Are you running the code on a Raspberry Pi?')
+    print("Are you running the code on a Raspberry Pi?")
     exit()
 
 # pin assignment
@@ -55,8 +55,8 @@ class Motorroller:
         gpio.setup(BRK3, gpio.OUT)
         gpio.setup(MOTOR_SELECT, gpio.OUT)
         gpio.setup(DRIVER_SELECT, gpio.OUT)
-        
-        #setup PWM
+
+        # setup PWM
         self.clw_pwm = gpio.PWM(CLW, self.motor_speed)
         self.ccw_pwm = gpio.PWM(CCW, self.motor_speed)
         self.clw_pwm.ChangeDutyCycle(50)
@@ -94,13 +94,13 @@ class Motorroller:
         resp = self.spi.xfer([0x06, msg, 0x00])
         value = (resp[1] << 8) + resp[2]
         value = int(value)
-        
+
         # clip value
         if value <= 0:
             value = 0
         elif value > 4095:
             value = 4095
-        
+
         return value
 
     def read_all_potis(self):
@@ -132,7 +132,7 @@ class Motorroller:
         self.ccw_pwm.ChangeFrequency(self.motor_speed)
         self.clw_pwm.ChangeFrequency(self.motor_speed)
 
-        if direction == 'ccw':
+        if direction == "ccw":
             self.ccw_pwm.start(50)
             sleep(duration)
             self.ccw_pwm.stop()
@@ -149,24 +149,40 @@ class Motorroller:
         self.gpio_reset()
 
     def process_command(self, cmd):
-        valid_channels = {0, 1, 2, 3}
-        valid_commands = {'i', 'I', 'o', 'O'}
+        valid_channels = {0, 1, 2, 3, 7, 8, 9}
+        valid_directions = {"i", "I", "o", "O"}
 
         try:
             first_char = int(cmd[0])
             second_char = cmd[1]
 
             assert first_char in valid_channels
-            assert second_char in valid_commands
+            assert second_char in valid_directions
         except (AssertionError, ValueError):
             raise ValueError(
-                '''Command format incorrect. Format is XDY, where X is channel numnber 0, 1, 2 and 3, D is either I for in or O for out and Y is the duration in seconds (int or float)\n
-                '''
+                """Command format incorrect. Please use the following format:
+
+                    Format is XYZ, where X is one of the following:
+
+                    0 --> Motor 0
+                    1 --> Motor 
+                    2 --> Motor 2
+                    3 --> Motor 3
+
+                    7 --> Both motors 0 and 1
+                    8 --> Both motors 2 and 3
+
+                    9 --> Read potentiometers only
+
+                    Y is the direction either I for in or O for out (case insensitive)
+
+                    Z is the duration in seconds (int or float)\n
+                """
             )
 
         channel = int(first_char)
 
-        direction = 'clw' if second_char in {'i', 'I'} else 'ccw'
+        direction = "clw" if second_char in {"i", "I"} else "ccw"
 
         # Try to cast duration to both integer and float
         if len(cmd) == 3:
@@ -180,10 +196,36 @@ class Motorroller:
             try:
                 duration = float(s)  # Try to cast as a float
             except ValueError:
-                raise ValueError('Could not cast the string to a number.')
+                raise ValueError("Could not cast the string to a number.")
 
         return channel, direction, duration
 
+
+    def process_action(command_str):
+        channel, direction, duration = motorroller.process_action(command_str)
+        if channel in {0, 1, 2, 3}:
+            print(
+                f"Moving motor {channel}, direction {direction} for {duration} seconds."
+            )
+            motorroller.move_motor(channel, direction, duration)
+            print(f"Poti values: {motorroller.read_all_potis()}")
+        elif channel == 7:
+            print(
+                f"Moving motors 0 and 1, direction {direction} for {duration} seconds."
+            )
+            motorroller.move_motor(0, direction, duration)
+            motorroller.move_motor(1, direction, duration)
+            print(f"Poti values: {motorroller.read_all_potis()}")
+        elif channel == 8:
+            print(
+                f"Moving motors 2 and 3, direction {direction} for {duration} seconds."
+            )
+            motorroller.move_motor(2, direction, duration)
+            motorroller.move_motor(3, direction, duration)
+            print(f"Poti values: {motorroller.read_all_potis()}")
+        elif channel == 9:
+            print(f"Poti values: {motorroller.read_all_potis()}")
+                        
 
 # -------
 
@@ -191,51 +233,57 @@ class Motorroller:
 def start_interactive_mode(motorroller):
     while True:
         try:
-            cmmd = input('Enter command or ctrl-C to abort-->')
-            channel, direction, duration = motorroller.process_command(cmmd)
-            print(
-                f'Moving motor {channel}, direction {direction} for {duration} seconds.'
-            )
-            motorroller.move_motor(channel, direction, duration)
-            print(f'Poti values: {motorroller.read_all_potis()}')
+            command_str = input("Enter command or ctrl-C to abort-->")
+            channel, direction, duration = motorroller.process_action(command_str)
 
         except (EOFError, KeyboardInterrupt):
-            print('\nUser input cancelled. Aborting...')
+            print("\nUser input cancelled. Aborting...")
             break
 
         except ValueError as e:
             print(e)
 
 
-def start_single_mode(motorroller, cmd):
-    channel, direction, duration = motorroller.process_command(cmmd)
-    print(f'Moving motor {channel}, direction {direction} for {duration} seconds.')
+def start_single_mode(motorroller, command_str):
+    channel, direction, duration = motorroller.process_action(command_str)
+    print(f"Moving motor {channel}, direction {direction} for {duration} seconds.")
     motorroller.move_motor(channel, direction, duration)
-    print(f'Poti values: {motorroller.read_all_potis()}')
+    print(f"Poti values: {motorroller.read_all_potis()}")
 
 
 def start_server_mode():
-    print('Client / Server mode not implemented yet.')
+    print("Client / Server mode not implemented yet.")
 
 
 # -------
 
 
 def main():
-    parser = argparse.ArgumentParser(prog='motorroller')
+    parser = argparse.ArgumentParser(prog="motorroller")
     parser.add_argument(
-        '-c', '--command', nargs=1, type=str, help='Enter command as an argument.', default=''
+        "-c",
+        "--command",
+        nargs=1,
+        type=str,
+        help="Enter command as an argument.",
+        default="",
     )
-    parser.add_argument('--server', action=argparse.BooleanOptionalAction, help = 'Start in client / server mode.')
-    parser.add_argument('-v', '--version', action='version', version=__version__, help='Print version.')
     parser.add_argument(
-        '-s',
-        '--speed',
-        nargs='?',
+        "--server",
+        action=argparse.BooleanOptionalAction,
+        help="Start in client / server mode.",
+    )
+    parser.add_argument(
+        "-v", "--version", action="version", version=__version__, help="Print version."
+    )
+    parser.add_argument(
+        "-s",
+        "--speed",
+        nargs="?",
         type=int,
         const=200,
         default=200,
-        help='Motor speed.',
+        help="Motor speed.",
     )
 
     args = parser.parse_args()
@@ -253,5 +301,5 @@ def main():
 
 
 # -----
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()
