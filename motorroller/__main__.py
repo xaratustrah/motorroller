@@ -55,6 +55,12 @@ class Motorroller:
         gpio.setup(BRK3, gpio.OUT)
         gpio.setup(MOTOR_SELECT, gpio.OUT)
         gpio.setup(DRIVER_SELECT, gpio.OUT)
+        
+        #setup PWM
+        self.clw_pwm = gpio.PWM(CLW, self.motor_speed)
+        self.ccw_pwm = gpio.PWM(CCW, self.motor_speed)
+        self.clw_pwm.ChangeDutyCycle(50)
+        self.ccw_pwm.ChangeDutyCycle(50)
 
     def spi_init(self):
         # init SPI
@@ -123,10 +129,8 @@ class Motorroller:
 
         # setup PWM: this has to be done here it seems
         # that PWM forgets the settings after each stop
-        self.clw_pwm = gpio.PWM(CLW, self.motor_speed)
-        self.ccw_pwm = gpio.PWM(CCW, self.motor_speed)
-        self.clw_pwm.ChangeDutyCycle(50)
-        self.ccw_pwm.ChangeDutyCycle(50)
+        self.ccw_pwm.ChangeFrequency(self.motor_speed)
+        self.clw_pwm.ChangeFrequency(self.motor_speed)
 
         if direction == 'ccw':
             self.ccw_pwm.start(50)
