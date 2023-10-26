@@ -297,7 +297,7 @@ def main():
     logger.remove()
     logger.add(sys.stdout, level="INFO")
     if args.log:
-        logger.add(outfilepath + f'{outfilename}.log', level='DEBUG')
+        logger.add(f'{outfilename}.log', level='DEBUG')
 
     if args.command:
         start_single_mode(motorroller, args.single[0])
