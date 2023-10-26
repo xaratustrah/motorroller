@@ -295,7 +295,7 @@ def main():
     
     logger.remove(0)
     logger.add(sys.stdout, level='INFO')
-    logger.patch(lambda record: record.update(name=record["file"].name))
+    #logger.patch(lambda record: record.update(name=record["file"].name))
     
     if args.log:
         outfilename = args.log[0]
