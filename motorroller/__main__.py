@@ -202,7 +202,7 @@ class Motorroller:
 
 
     def process_action(self, command_str):
-        channel, direction, duration = motorroller.process_action(command_str)
+        channel, direction, duration = self.process_command(command_str)
         if channel in {0, 1, 2, 3}:
             print(
                 f"Moving motor {channel}, direction {direction} for {duration} seconds."
