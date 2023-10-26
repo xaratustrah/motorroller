@@ -292,7 +292,7 @@ def main():
 
     args = parser.parse_args()
     motorroller = Motorroller(args.speed)
-    outfilename = args.outfilename[0]
+    outfilename = args.log[0]
     
     logger.remove()
     logger.add(sys.stdout, level="INFO")
