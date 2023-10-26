@@ -294,7 +294,7 @@ def main():
     motorroller = Motorroller(args.speed)
     
     logger.remove(0)
-    logger.add(sys.stdout, level='INFO')
+    logger.add(sys.stdout, level='INFO', format="[{file.name}] {message}")
     
     if args.log:
         outfilename = args.log[0]
