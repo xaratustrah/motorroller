@@ -207,24 +207,24 @@ class Motorroller:
             print(
                 f"Moving motor {channel}, direction {direction} for {duration} seconds."
             )
-            motorroller.move_motor(channel, direction, duration)
-            print(f"Poti values: {motorroller.read_all_potis()}")
+            self.move_motor(channel, direction, duration)
+            print(f"Poti values: {self.read_all_potis()}")
         elif channel == 7:
             print(
                 f"Moving motors 0 and 1, direction {direction} for {duration} seconds."
             )
-            motorroller.move_motor(0, direction, duration)
-            motorroller.move_motor(1, direction, duration)
-            print(f"Poti values: {motorroller.read_all_potis()}")
+            self.move_motor(0, direction, duration)
+            self.move_motor(1, direction, duration)
+            print(f"Poti values: {self.read_all_potis()}")
         elif channel == 8:
             print(
                 f"Moving motors 2 and 3, direction {direction} for {duration} seconds."
             )
-            motorroller.move_motor(2, direction, duration)
-            motorroller.move_motor(3, direction, duration)
-            print(f"Poti values: {motorroller.read_all_potis()}")
+            self.move_motor(2, direction, duration)
+            self.move_motor(3, direction, duration)
+            print(f"Poti values: {self.read_all_potis()}")
         elif channel == 9:
-            print(f"Poti values: {motorroller.read_all_potis()}")
+            print(f"Poti values: {self.read_all_potis()}")
                         
 
 # -------
