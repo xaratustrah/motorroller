@@ -187,7 +187,7 @@ class Motorroller:
         channel = int(first_char)
 
         # assign CCW to the direction of in
-        direction = 'ccw' if second_char in {'i', 'I'} else 'ccw'
+        direction = 'ccw' if second_char in {'i', 'I'} else 'clw'
 
         # Try to cast duration to both integer and float
         if len(cmd) == 3:
