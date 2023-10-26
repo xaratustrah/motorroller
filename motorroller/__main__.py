@@ -8,6 +8,7 @@ from time import sleep
 import readline
 import argparse
 import os
+from loguru import logger
 from .version import __version__
 
 if os.name == "posix" and os.uname().machine == "armv7l":
@@ -285,12 +286,22 @@ def main():
         default=200,
         help="Motor speed.",
     )
+    parser.add_argument('-l', '--log', nargs=1, type=str,
+                        help='Path and name of the log file.')
+    
 
     args = parser.parse_args()
     motorroller = Motorroller(args.speed)
+    outfilename = args.outfilename[0]
+    
+    logger.remove()
+    logger.add(sys.stdout, level="INFO")
+    if args.log:
+        logger.add(outfilepath + f'{outfilename}.log', level='DEBUG')
 
     if args.command:
         start_single_mode(motorroller, args.single[0])
+        logger.info('hello')
     elif args.server:
         start_server_mode(motorroller)
     else:
