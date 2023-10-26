@@ -294,8 +294,8 @@ def main():
     motorroller = Motorroller(args.speed)
     
     logger.remove(0)
+    logger.patch(lambda record: record.update(name=record["file"].name))
     logger.add(sys.stdout, level='INFO')
-    logger = logger.patch(lambda record: record.update(name=record["file"].name))
     
     if args.log:
         outfilename = args.log[0]
