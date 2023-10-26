@@ -149,15 +149,18 @@ class Motorroller:
         self.gpio_reset()
 
     def process_command(self, cmd):
-        valid_channels = {0, 1, 2, 3, 7, 8, 9}
+        valid_commands = {0, 1, 2, 3, 7, 8, 9}
         valid_directions = {"i", "I", "o", "O"}
 
         try:
+            assert len(cmd) >= 3
+            
             first_char = int(cmd[0])
             second_char = cmd[1]
 
-            assert first_char in valid_channels
+            assert first_char in valid_commands
             assert second_char in valid_directions
+            
         except (AssertionError, ValueError):
             raise ValueError(
                 """Command format incorrect. Please use the following format:
@@ -172,7 +175,7 @@ class Motorroller:
                     7 --> Both motors 0 and 1
                     8 --> Both motors 2 and 3
 
-                    9 --> Read out potentiometers only
+                    9 --> Read out potentiometers only, the other two positions will be ignored
 
                     Y is the direction either I for in or O for out (case insensitive)
 
@@ -198,32 +201,32 @@ class Motorroller:
             except ValueError:
                 raise ValueError("Could not cast the string to a number.")
 
-        return channel, direction, duration
+        return command, direction, duration
 
 
     def process_action(self, command_str):
-        channel, direction, duration = self.process_command(command_str)
-        if channel in {0, 1, 2, 3}:
+        command, direction, duration = self.process_command(command_str)
+        if command in {0, 1, 2, 3}:
             print(
-                f"Moving motor {channel}, direction {direction} for {duration} seconds."
+                f"Moving motor {command}, direction {direction} for {duration} seconds."
             )
             self.move_motor(channel, direction, duration)
             print(f"Poti values: {self.read_all_potis()}")
-        elif channel == 7:
+        elif command == 7:
             print(
                 f"Moving motors 0 and 1, direction {direction} for {duration} seconds."
             )
             self.move_motor(0, direction, duration)
             self.move_motor(1, direction, duration)
             print(f"Poti values: {self.read_all_potis()}")
-        elif channel == 8:
+        elif command == 8:
             print(
                 f"Moving motors 2 and 3, direction {direction} for {duration} seconds."
             )
             self.move_motor(2, direction, duration)
             self.move_motor(3, direction, duration)
             print(f"Poti values: {self.read_all_potis()}")
-        elif channel == 9:
+        elif command == 9:
             print(f"Poti values: {self.read_all_potis()}")
                         
 
