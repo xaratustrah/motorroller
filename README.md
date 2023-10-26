@@ -47,7 +47,32 @@ This mode is not implemented yet.
 
 ### Command structure
 
-Command format is XDY, where X is channel numnber 0, 1, 2 and 3, D is either I for in or O for out and Y is the duration in seconds (int or float). For example `0i1` means move motor 0 inside 1 second long, whereas `1o3.456` means move motor 1 outside 3.456 seconds long
+Format is XYZ, where X is one of the following:
+
+    0 --> Motor 0
+    1 --> Motor 
+    2 --> Motor 2
+    3 --> Motor 3
+
+    7 --> Both motors 0 and 1
+    8 --> Both motors 2 and 3
+
+    9 --> Read out potentiometers only, the other two positions will be ignored
+
+    Y is the direction either I for in or O for out (case insensitive)
+
+    Z is the duration in seconds (int or float
+
+For example `0i1` means move motor 0 inside 1 second long, whereas `1o3.456` means move motor 1 outside 3.456 seconds long
+
+
+### Logger
+
+A logger file name can be provided in order to put actions and readout information together with a time stamp in a log file.
+
+```
+motorroller --speed 1000 --log ./logfile
+```
 
 
 ## Hardware description

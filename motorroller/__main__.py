@@ -241,7 +241,7 @@ def start_interactive_mode(motorroller):
             motorroller.process_action(command_str)
 
         except (EOFError, KeyboardInterrupt):
-            print('\nUser input cancelled. Aborting...')
+            logger.info('\nUser input cancelled. Aborting...')
             break
 
         except ValueError as e:
@@ -253,7 +253,7 @@ def start_single_mode(motorroller, command_str):
 
 
 def start_server_mode():
-    print('Client / Server mode not implemented yet.')
+    logger.info('Client / Server mode not implemented yet.')
 
 
 # -------
@@ -302,8 +302,8 @@ def main():
         logger.add(f'{outfilename}.log')
 
     if args.command:
-        logger.info('Running single command.')
-        start_single_mode(motorroller, args.single[0])
+        logger.info('Running a single command.')
+        start_single_mode(motorroller, args.command[0])
 
     elif args.server:
         logger.info('Starting client / server mode.')
