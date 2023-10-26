@@ -172,7 +172,7 @@ class Motorroller:
                     7 --> Both motors 0 and 1
                     8 --> Both motors 2 and 3
 
-                    9 --> Read potentiometers only
+                    9 --> Read out potentiometers only
 
                     Y is the direction either I for in or O for out (case insensitive)
 
@@ -201,7 +201,7 @@ class Motorroller:
         return channel, direction, duration
 
 
-    def process_action(command_str):
+    def process_action(self, command_str):
         channel, direction, duration = motorroller.process_action(command_str)
         if channel in {0, 1, 2, 3}:
             print(
@@ -234,7 +234,7 @@ def start_interactive_mode(motorroller):
     while True:
         try:
             command_str = input("Enter command or ctrl-C to abort-->")
-            channel, direction, duration = motorroller.process_action(command_str)
+            motorroller.process_action(command_str)
 
         except (EOFError, KeyboardInterrupt):
             print("\nUser input cancelled. Aborting...")
@@ -245,10 +245,7 @@ def start_interactive_mode(motorroller):
 
 
 def start_single_mode(motorroller, command_str):
-    channel, direction, duration = motorroller.process_action(command_str)
-    print(f"Moving motor {channel}, direction {direction} for {duration} seconds.")
-    motorroller.move_motor(channel, direction, duration)
-    print(f"Poti values: {motorroller.read_all_potis()}")
+    motorroller.process_action(command_str)
 
 
 def start_server_mode():
