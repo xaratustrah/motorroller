@@ -265,10 +265,10 @@ def main():
     parser.add_argument(
         '-c',
         '--command',
-        nargs=1,
+        nargs='+',
         type=str,
         help='Enter command as an argument.',
-        default='',
+        default=None,
     )
     parser.add_argument(
         '--server',
@@ -304,8 +304,10 @@ def main():
         logger.add(f'{outfilename}.log')
 
     if args.command:
-        logger.info('Running a single command.')
-        start_single_mode(motorroller, args.command[0])
+        logger.info('Running individual commands.')
+        print(args.command[0])
+        #start_single_mode(motorroller, args.command[0])
+        exit()
 
     elif args.server:
         logger.info('Starting client / server mode.')
