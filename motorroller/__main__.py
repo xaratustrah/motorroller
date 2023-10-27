@@ -305,7 +305,7 @@ def main():
 
     if args.command:
         logger.info('Running individual commands.')
-        print(args.command[0])
+        print(args.command)
         #start_single_mode(motorroller, args.command[0])
         exit()
 
