@@ -249,8 +249,9 @@ def start_interactive_mode(motorroller):
             print(e)
 
 
-def start_single_mode(motorroller, command_str):
-    motorroller.process_action(command_str)
+def start_single_mode(motorroller, command_str_list):
+    for command in command_str_list:
+        motorroller.process_action(command)
 
 
 def start_server_mode():
@@ -305,9 +306,7 @@ def main():
 
     if args.command:
         logger.info('Running individual commands.')
-        print(args.command)
-        #start_single_mode(motorroller, args.command[0])
-        exit()
+        start_single_mode(motorroller, args.command)
 
     elif args.server:
         logger.info('Starting client / server mode.')
