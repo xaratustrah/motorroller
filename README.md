@@ -1,7 +1,7 @@
 # motorroller - Open hardware open software stepper motor controller
 
 <div style="margin-left:auto;margin-right:auto;text-align:center">
-<img src="https://raw.githubusercontent.com/xaratustrah/motorroller/master/rsrc/motorroller.png" width="256">
+<img src="https://raw.githubusercontent.com/xaratustrah/motorroller/master/rsrc/motorroller.png" width="512">
 </div>
 
 Motoroller is an easy to use open hardware open software stepper motor controller using Raspberry Pi. Depending on which driver you use, you can controll have 5 phase or 2 phase stepper motors. In this current configuration, it can control up to 4 motors. Also supported are the readout of linear potentiometers.
