@@ -8,14 +8,21 @@ Motoroller is an easy to use open hardware open software stepper motor controlle
 
 
 ## Installation
-After cloning the code of the repository, go inside that directory and type:
+Please download the latest version of [Raspberry Pi OS Lite](https://www.raspberrypi.com/software/). Newest versions require setting up username / password already in the imager tool. You can also enable SSH from there. Then you can expand file system using the script `raspi-config`. Then you need a couple of things:
+
+```
+sudo apt udpate
+sudo apt -y install git python3-pip
+```
+
+The clone the repository and go inside that directory and type (you may need to provide the command line arg `--break-system-packages` before the `-r` below, depending on your system, and how you are using your Raspberry Pi. Please use with care!):
 
 ```
 pip install -r requirements.txt
 pip3 install .
 ```
 
-or uninstall
+For uninstalling you can type:
 
 ```
 pip3 uninstall motorroller
