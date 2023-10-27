@@ -33,7 +33,7 @@ pip3 uninstall motorroller
 
 ### Running modes
 
-Motoroller can be run in three different modes. The switch `--speed` is reserved for setting the rotation speed.
+Motoroller can be run in three different modes. It accepts commands in interactive, command line and client / server mode.
 
 #### Interactive mode
 
@@ -43,12 +43,15 @@ this is the default mode. There will be an input prompt for entering commands. T
 motoroller
 ```
 
-#### Single command mode
-Use the command directly in the command prompt:
+#### Commands as arguments
+Use one or several commands directly in the command prompt:
 
 ```
-motoroller --command 0i1
+motoroller --command 0i1 0o1
 ```
+
+Moves motor 0 in and out for 1 seconds.
+
 
 #### Client / Server mode
 
@@ -74,14 +77,25 @@ Format is XYZ, where X is one of the following:
 
 For example `0i1` means move motor 0 inside 1 second long, whereas `1o3.456` means move motor 1 outside 3.456 seconds long
 
+### Other features
+Following features work in combincatino with all obove mentioned operation modes:
 
-### Logger
+#### Logger
 
-A logger file name can be provided in order to put actions and readout information together with a time stamp in a log file.
+A logger file name can be provided in order to put actions and readout information together with a time stamp in a log file. You activate the logger by using the `--log` swtich:
+
+```
+motorroller --log ./logfile
+```
+
+#### Motor speed
+
+The switch `--speed` is for setting the rotation speed.
 
 ```
 motorroller --speed 1000 --log ./logfile
 ```
+
 
 
 ## Hardware description
