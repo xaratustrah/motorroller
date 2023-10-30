@@ -291,14 +291,18 @@ def main():
     parser.add_argument('-l', '--log', nargs=1, type=str,
                         help='Path and name of the log file.')
     
-
-    args = parser.parse_args()
-    motorroller = Motorroller(args.speed)
-    
     logger.remove(0)
     logger.add(sys.stdout, level='INFO')
     #logger.patch(lambda record: record.update(name=record["file"].name))
-    
+
+    args = parser.parse_args()
+    speed = args.speed
+    if speed > 1200:
+        logger.info('Given speed {speed} is not so secure. Limitting to 1200.')
+        speed = 1200
+        
+    motorroller = Motorroller(speed)
+        
     if args.log:
         outfilename = args.log[0]
         # all levels
