@@ -112,6 +112,8 @@ class Motorroller:
 
     def read_all_potis(self):
         sleep(0.2)
+        pot0, pot1, pot2, pot3 = 0, 0, 0, 0
+        
         for i in range(10):
             pot0 += self.read_poti(0)
             pot1 += self.read_poti(1)
