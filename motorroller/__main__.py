@@ -298,7 +298,7 @@ def main():
     args = parser.parse_args()
     speed = args.speed
     if speed > 1200:
-        logger.info('Given speed {speed} is not so secure. Limitting to 1200.')
+        logger.info(f'Given speed {speed} is not so secure. Limitting to 1200.')
         speed = 1200
         
     motorroller = Motorroller(speed)
