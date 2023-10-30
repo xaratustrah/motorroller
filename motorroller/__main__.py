@@ -113,13 +113,13 @@ class Motorroller:
     def read_all_potis(self):
         sleep(0.2)
         pot0, pot1, pot2, pot3 = 0, 0, 0, 0
-        
-        for i in range(10):
+        # do many measurements and average
+        for i in range(20):
             pot0 += self.read_poti(0)
             pot1 += self.read_poti(1)
             pot2 += self.read_poti(2)
             pot3 += self.read_poti(3)
-        return [int(pot0 / 10), int(pot1 / 10), int(pot2 / 10), int(pot3 / 10)]
+        return [int(pot0 / 20), int(pot1 / 10), int(pot2 / 10), int(pot3 / 10)]
 
     def move_motor(self, channel, direction, duration):
         driver_select, motor_select = (
