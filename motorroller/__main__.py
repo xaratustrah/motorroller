@@ -9,6 +9,7 @@ import readline
 import argparse
 import os, sys
 from loguru import logger
+import tomllib
 from .version import __version__
 
 if os.name == 'posix' and os.uname().machine == 'armv7l':
@@ -36,12 +37,14 @@ DRIVER_SELECT = 38
 
 
 class Motorroller:
-    def __init__(self, motor_speed):
+    def __init__(self, motor_speed, config_dic):
         self.motor_speed = motor_speed
         self.brk_list = [BRK0, BRK1, BRK2, BRK3]
         self.spi_init()
         self.gpio_setup()
         self.gpio_reset()
+        if config:
+            self.process_config_data(config_dic)
 
     def gpio_setup(self):
         # gpio Setup
@@ -81,6 +84,9 @@ class Motorroller:
         for channel in {0, 1, 2, 3}:
             gpio.output(self.brk_list[channel], gpio.LOW)
 
+    def process_config_data(self, config_dic):
+        pass
+    
     def read_poti(self, channel):
         msg = (
             0x00
@@ -105,12 +111,13 @@ class Motorroller:
         return value
 
     def read_all_potis(self):
-        return [
-            self.read_poti(0),
-            self.read_poti(1),
-            self.read_poti(2),
-            self.read_poti(3),
-        ]
+        sleep(0.2)
+        for i in range(10):
+            pot0 += self.read_poti(0)
+            pot1 += self.read_poti(1)
+            pot2 += self.read_poti(2)
+            pot3 += self.read_poti(3)
+        return [int(pot0 / 10), int(pot1 / 10), int(pot2 / 10), int(pot3 / 10)]
 
     def move_motor(self, channel, direction, duration):
         driver_select, motor_select = (
@@ -291,6 +298,9 @@ def main():
     parser.add_argument('-l', '--log', nargs=1, type=str,
                         help='Path and name of the log file.')
     
+    parser.add_argument('--config', nargs=1, type=str, default=None,
+                        help='Path and name of the config file.')
+
     logger.remove(0)
     logger.add(sys.stdout, level='INFO')
     #logger.patch(lambda record: record.update(name=record["file"].name))
@@ -301,7 +311,15 @@ def main():
         logger.info(f'Given speed {speed} is not so secure. Limitting to 1200.')
         speed = 1200
         
-    motorroller = Motorroller(speed)
+    # read config file
+    conf = None
+    if args.config:
+        logger.info('Config file has been provided.')
+        with open(args.config, "rb") as f:
+            conf = tomllib.load(f)
+    
+    # ready to go
+    motorroller = Motorroller(speed, conf)
         
     if args.log:
         outfilename = args.log[0]
