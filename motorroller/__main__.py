@@ -43,7 +43,7 @@ class Motorroller:
         self.spi_init()
         self.gpio_setup()
         self.gpio_reset()
-        if config:
+        if config_dic:
             self.process_config_data(config_dic)
 
     def gpio_setup(self):
