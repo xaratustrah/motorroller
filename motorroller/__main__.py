@@ -22,7 +22,7 @@ else:
     print("Are you running the code on a Raspberry Pi?")
     exit()
 
-# pin assignment
+# Raspberry PI pin assignment
 
 CLW = 16
 CCW = 18
@@ -431,7 +431,7 @@ def start_single_mode(motorroller, command_str_list):
 
 
 def start_server_mode():
-    logger.info("Client / Server mode not implemented yet.")
+    logger.error("Client / Server mode not implemented yet.")
 
 
 # -------
@@ -502,6 +502,7 @@ def main():
         except:
             logger.error('Calibration file does not have required format.')
             exit()
+        logger.success("Calibration file is good.")
     else:
         logger.warning(
             "No calibration file provided, so limits are unknown. Proceed with caution!"
