@@ -161,7 +161,7 @@ class Motorroller:
                     and direction == "ccw"
                 ):
                     logger.error(
-                        "Motor 0 limit_inside position reached. Cannot move any further in that direction."
+                        "Motor mot0 limit_inside position reached. Cannot move any further in that direction."
                     )
                     return
                 elif (
@@ -169,12 +169,12 @@ class Motorroller:
                     and direction == "clw"
                 ):
                     logger.error(
-                        "Motor 0 limit_outside position reached. Cannot move any further in that direction."
+                        "Motor mot0 limit_outside position reached. Cannot move any further in that direction."
                     )
                     return
                 else:
                     logger.info(
-                        "Motor 0 still in the given range of calibration file. Moving..."
+                        "Motor mot0 still in the given range of calibration file. Moving..."
                     )
 
         if channel == 1:
@@ -195,24 +195,24 @@ class Motorroller:
                 )
 
                 if (
-                    pot0 <= self.get_adcval_from_mm(limit_inside, p1, p2)
+                    pot1 <= self.get_adcval_from_mm(limit_inside, p1, p2)
                     and direction == "ccw"
                 ):
                     logger.error(
-                        "Motor 1 limit_inside position reached. Cannot move any further in that direction."
+                        "Motor mot1 limit_inside position reached. Cannot move any further in that direction."
                     )
                     return
                 elif (
-                    pot0 >= self.get_adcval_from_mm(limit_outside, p1, p2)
+                    pot1 >= self.get_adcval_from_mm(limit_outside, p1, p2)
                     and direction == "clw"
                 ):
                     logger.error(
-                        "Motor 1 limit_outside position reached. Cannot move any further in that direction."
+                        "Motor mot1 limit_outside position reached. Cannot move any further in that direction."
                     )
                     return
                 else:
                     logger.info(
-                        "Motor 1 still in the given range of calibration file. Moving..."
+                        "Motor mot1 still in the given range of calibration file. Moving..."
                     )
 
         if channel == 2:
@@ -233,24 +233,24 @@ class Motorroller:
                 )
 
                 if (
-                    pot0 <= self.get_adcval_from_mm(limit_inside, p1, p2)
+                    pot2 <= self.get_adcval_from_mm(limit_inside, p1, p2)
                     and direction == "ccw"
                 ):
                     logger.error(
-                        "Motor 2 limit_inside position reached. Cannot move any further in that direction."
+                        "Motor mot2 limit_inside position reached. Cannot move any further in that direction."
                     )
                     return
                 elif (
-                    pot0 >= self.get_adcval_from_mm(limit_outside, p1, p2)
+                    pot2 >= self.get_adcval_from_mm(limit_outside, p1, p2)
                     and direction == "clw"
                 ):
                     logger.error(
-                        "Motor 2 limit_outside position reached. Cannot move any further in that direction."
+                        "Motor mot2 limit_outside position reached. Cannot move any further in that direction."
                     )
                     return
                 else:
                     logger.info(
-                        "Motor 2 still in the given range of calibration file. Moving..."
+                        "Motor mot2 still in the given range of calibration file. Moving..."
                     )
 
         if channel == 3:
@@ -271,24 +271,24 @@ class Motorroller:
                 )
 
                 if (
-                    pot0 <= self.get_adcval_from_mm(limit_inside, p1, p2)
+                    pot3 <= self.get_adcval_from_mm(limit_inside, p1, p2)
                     and direction == "ccw"
                 ):
                     logger.error(
-                        "Motor 3 limit_inside position reached. Cannot move any further in that direction."
+                        "Motor mot3 limit_inside position reached. Cannot move any further in that direction."
                     )
                     return
                 elif (
-                    pot0 >= self.get_adcval_from_mm(limit_outside, p1, p2)
+                    pot3 >= self.get_adcval_from_mm(limit_outside, p1, p2)
                     and direction == "clw"
                 ):
                     logger.error(
-                        "Motor 3 limit_outside position reached. Cannot move any further in that direction."
+                        "Motor mot3 limit_outside position reached. Cannot move any further in that direction."
                     )
                     return
                 else:
                     logger.info(
-                        "Motor 3 still in the given range of calibration file. Moving..."
+                        "Motor mot3 still in the given range of calibration file. Moving..."
                     )
 
         # now you can start moving the motors
