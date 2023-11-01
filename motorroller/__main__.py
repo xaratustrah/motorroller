@@ -432,7 +432,6 @@ def start_single_mode(motorroller, command_str_list):
 
     except (EOFError, KeyboardInterrupt):
         logger.success("\nUser input cancelled. Aborting...")
-        break
 
     except ValueError as e:
         print(e)
