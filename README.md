@@ -96,6 +96,35 @@ The switch `--speed` is for setting the rotation speed.
 motorroller --speed 1000 --log ./logfile
 ```
 
+#### Calibration file
+Working with a calibration file insures a safer operation. In the calibration file, which is [TOML format]() limits can be set for every motor. You can provide the name of the calibration file as a command line argument:
+
+```
+motorroller --speed 1000 --log ./logfile --cal clibration.toml
+```
+
+This works for all modes of operation. Here is the structure of the calibration file:
+
+```toml
+# Value entry for every motor
+
+[mot0]
+
+# Absolute minimum and maximum in mm
+limit_outside = 40
+limit_inside = 60
+
+# Provide two calibration points
+# For calibration points, within each pair, please use either floats or ints
+# First value is in mm, second the ADC / poti value
+cal_points = [[49, 1864], [83, 1072]]
+```
+
+Please note that in the current hardware configuration, as motors move inside:
+
+* values in mm increase
+* ADC values decrease
+* Motor rotation direction would correspond to CCW
 
 
 ## Hardware description

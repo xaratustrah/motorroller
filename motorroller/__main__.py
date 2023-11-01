@@ -1,7 +1,7 @@
 """
 Motorroller - Open hardware open software stepper motor controller
 
-2023 xaratustra@github
+2023 xaratustrah@github
 """
 
 from time import sleep
@@ -120,14 +120,15 @@ class Motorroller:
 
     def read_all_potis(self):
         sleep(0.2)
+        num_avg = 20
         pot0, pot1, pot2, pot3 = 0, 0, 0, 0
         # do many measurements and average
-        for i in range(20):
+        for i in range(num_avg):
             pot0 += self.read_poti(0)
             pot1 += self.read_poti(1)
             pot2 += self.read_poti(2)
             pot3 += self.read_poti(3)
-        return [int(pot0 / 20), int(pot1 / 10), int(pot2 / 10), int(pot3 / 10)]
+        return [int(pot0 / num_avg), int(pot1 / num_avg), int(pot2 / num_avg), int(pot3 / num_avg)]
 
     def move_motor(self, channel, direction, duration):
         # first read the potis
@@ -403,7 +404,7 @@ def start_interactive_mode(motorroller):
             motorroller.process_action(command_str)
 
         except (EOFError, KeyboardInterrupt):
-            logger.info("\nUser input cancelled. Aborting...")
+            logger.success("\nUser input cancelled. Aborting...")
             break
 
         except ValueError as e:
@@ -477,6 +478,8 @@ def main():
         logger.info("Calibration file has been provided.")
         with open(args.cal[0], "rb") as f:
             cal_dic = tomllib.load(f)
+    else:
+        logger.warning('No calibration file provided, so limits are unknown. Proceed with caution!')
 
     # ready to go
     motorroller = Motorroller(speed, cal_dic)
