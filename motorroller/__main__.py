@@ -536,6 +536,7 @@ def main():
         logger.info("Starting interactive mode.")
         start_interactive_mode(motorroller)
 
+    # gracefully close down
     motorroller.closedown()
     exit()
 
