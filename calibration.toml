@@ -1,0 +1,30 @@
+# Config and calibration file for motors
+
+# Entry for every motor
+[mot0]
+# Absolute minimum and maximum in mm
+min = 20
+max = 40
+# calibration points, use either floats or ints
+cal = [[60, 1680], [46.5, 2058.0]]
+
+[mot1]
+# Absolute minimum and maximum in mm
+min = 20
+max = 40
+# calibration points, use either floats or ints
+cal = [[60, 1680], [46.5, 2058.0]]
+
+[mot2]
+# Absolute minimum and maximum in mm
+min = 20
+max = 40
+# calibration points, use either floats or ints
+cal = [[60, 1680], [46.5, 2058.0]]
+
+[mot3]
+# Absolute minimum and maximum in mm
+min = 20
+max = 40
+# calibration points, use either floats or ints
+cal = [[60, 1680], [46.5, 2058.0]]
