@@ -368,6 +368,11 @@ class Motorroller:
 
         return channel, direction, duration
 
+    def log_poti_values(self):
+        pot_vals = self.read_all_potis()
+        poti_string = f"Poti values: {self.read_all_potis()}" if not self.config_dic else f"Poti values: {pot_vals}, Positions: {self.get_mm_from_adcval(pot_vals[0]), self.get_mm_from_adcval(pot_vals[1], self.get_mm_from_adcval(pot_vals[2], self.get_mm_from_adcval(pot_vals[3]}"
+        logger.info(poti_string)
+        
     def process_action(self, command_str):
         channel, direction, duration = self.process_command(command_str)
         if channel in {0, 1, 2, 3}:
@@ -375,24 +380,23 @@ class Motorroller:
                 f"Moving motor {channel}, direction {direction} for {duration} seconds."
             )
             self.move_motor(channel, direction, duration)
-            logger.info(f"Poti values: {self.read_all_potis()}")
+            self.log_poti_values()
         elif channel == 7:
             logger.info(
                 f"Moving motors 0 and 1, direction {direction} for {duration} seconds."
             )
             self.move_motor(0, direction, duration)
             self.move_motor(1, direction, duration)
-            logger.info(f"Poti values: {self.read_all_potis()}")
+            self.log_poti_values()
         elif channel == 8:
             logger.info(
                 f"Moving motors 2 and 3, direction {direction} for {duration} seconds."
             )
             self.move_motor(2, direction, duration)
             self.move_motor(3, direction, duration)
-            logger.info(f"Poti values: {self.read_all_potis()}")
+            self.log_poti_values()
         elif channel == 9:
-            logger.info(f"Poti values: {self.read_all_potis()}")
-
+            self.log_poti_values()
 
 # -------
 
