@@ -140,7 +140,7 @@ class Motorroller:
             # then check limits according to config file
             if self.config_dic:
                 logger.info(
-                    "Config file has been provided. Checking position values before moving."
+                    "Checking position values with the limites provided in the calibration file before moving the motors."
                 )
                 mmin = self.config_dic["mot0"]["min"]
                 mmax = self.config_dic["mot0"]["max"]
@@ -150,14 +150,16 @@ class Motorroller:
                     logger.error(
                         "Motor 0 min position reached. Cannot move any further in that direction."
                     )
+                    return
                 elif (
                     pot0 >= self.get_adcval_from_mm(mmax, p1, p2) and direction == "clw"
                 ):
                     logger.error(
                         "Motor 0 max position reached. Cannot move any further in that direction."
                     )
+                    return
                 else:
-                    logger.info("Motor 0 still in range. Moving...")
+                    logger.info("Motor 0 still in the given range of calibration file. Moving...")
 
         driver_select, motor_select = (
             (0, 0)

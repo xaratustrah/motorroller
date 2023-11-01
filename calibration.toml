@@ -3,8 +3,8 @@
 # Entry for every motor
 [mot0]
 # Absolute minimum and maximum in mm
-min = 20
-max = 40
+min = 30
+max = 65
 # calibration points, use either floats or ints
 cal = [[60, 1680], [46.5, 2058.0]]
 
