@@ -1,8 +1,8 @@
-'''
+"""
 Motorroller - Open hardware open software stepper motor controller
 
 2023 xaratustra@github
-'''
+"""
 
 from time import sleep
 import readline
@@ -12,14 +12,14 @@ from loguru import logger
 import tomllib
 from .version import __version__
 
-if os.name == 'posix' and os.uname().machine == 'armv7l':
+if os.name == "posix" and os.uname().machine == "armv7l":
     try:
         import RPi.GPIO as gpio
         import spidev
     except RuntimeError:
-        print('''Error importing Raspberry Pi libraries!''')
+        print("""Error importing Raspberry Pi libraries!""")
 else:
-    print('Are you running the code on a Raspberry Pi?')
+    print("Are you running the code on a Raspberry Pi?")
     exit()
 
 # pin assignment
@@ -43,8 +43,7 @@ class Motorroller:
         self.spi_init()
         self.gpio_setup()
         self.gpio_reset()
-        if config_dic:
-            self.process_config_data(config_dic)
+        self.config_dic = config_dic
 
     def gpio_setup(self):
         # gpio Setup
@@ -84,9 +83,18 @@ class Motorroller:
         for channel in {0, 1, 2, 3}:
             gpio.output(self.brk_list[channel], gpio.LOW)
 
-    def process_config_data(self, config_dic):
-        pass
-    
+    @staticmethod
+    def get_mm_from_adcval(adc_val, p1, p2):
+        x1, y1 = p1[0], p1[1]
+        x2, y2 = p2[0], p2[1]
+        return (x2 - x1) / (y2 - y1) * (adc_val - y1) + x1
+
+    @staticmethod
+    def get_adcval_from_mm(mm, p1, p2):
+        x1, y1 = p1[0], p1[1]
+        x2, y2 = p2[0], p2[1]
+        return (y2 - y1) / (x2 - x1) * (mm - x1) + y1
+
     def read_poti(self, channel):
         msg = (
             0x00
@@ -122,6 +130,35 @@ class Motorroller:
         return [int(pot0 / 20), int(pot1 / 10), int(pot2 / 10), int(pot3 / 10)]
 
     def move_motor(self, channel, direction, duration):
+        # first read the potis
+        pot0, pot1, pot2, pot3 = self.read_all_potis()
+
+        if channel == 0:
+            # first set the flags
+            # driver_select, motor_select = 0, 0
+
+            # then check limits according to config file
+            if self.config_dic:
+                logger.info(
+                    "Config file has been provided. Checking position values before moving."
+                )
+                mmin = self.config_dic["mot0"]["min"]
+                mmax = self.config_dic["mot0"]["max"]
+                p1 = self.config_dic["mot0"]["cal"][0]
+                p2 = self.config_dic["mot0"]["cal"][1]
+                if pot0 <= self.get_adcval_from_mm(mmin, p1, p2) and direction == "ccw":
+                    logger.error(
+                        "Motor 0 min position reached. Cannot move any further in that direction."
+                    )
+                elif (
+                    pot0 >= self.get_adcval_from_mm(mmax, p1, p2) and direction == "clw"
+                ):
+                    logger.error(
+                        "Motor 0 max position reached. Cannot move any further in that direction."
+                    )
+                else:
+                    logger.info("Motor 0 still in range. Moving...")
+
         driver_select, motor_select = (
             (0, 0)
             if channel == 0
@@ -133,6 +170,8 @@ class Motorroller:
             if channel == 3
             else (None, None)
         )
+
+        # now you can start moving the motors
         gpio.output(DRIVER_SELECT, driver_select)
         gpio.output(MOTOR_SELECT, motor_select)
         gpio.output(self.brk_list[channel], 1)
@@ -142,7 +181,7 @@ class Motorroller:
         self.ccw_pwm.ChangeFrequency(self.motor_speed)
         self.clw_pwm.ChangeFrequency(self.motor_speed)
 
-        if direction == 'ccw':
+        if direction == "ccw":
             self.ccw_pwm.start(50)
             sleep(duration)
             self.ccw_pwm.stop()
@@ -160,20 +199,20 @@ class Motorroller:
 
     def process_command(self, cmd):
         valid_channels = {0, 1, 2, 3, 7, 8, 9}
-        valid_directions = {'i', 'I', 'o', 'O'}
+        valid_directions = {"i", "I", "o", "O"}
 
         try:
             assert len(cmd) >= 3
-            
+
             first_char = int(cmd[0])
             second_char = cmd[1]
 
             assert first_char in valid_channels
             assert second_char in valid_directions
-            
+
         except (AssertionError, ValueError):
             raise ValueError(
-                '''Command format incorrect. Please use the following format:
+                """Command format incorrect. Please use the following format:
 
                     Format is XYZ, where X is one of the following:
 
@@ -190,13 +229,13 @@ class Motorroller:
                     Y is the direction either I for in or O for out (case insensitive)
 
                     Z is the duration in seconds (int or float)\n
-                '''
+                """
             )
 
         channel = int(first_char)
 
         # assign CCW to the direction of in
-        direction = 'ccw' if second_char in {'i', 'I'} else 'clw'
+        direction = "ccw" if second_char in {"i", "I"} else "clw"
 
         # Try to cast duration to both integer and float
         if len(cmd) == 3:
@@ -210,36 +249,35 @@ class Motorroller:
             try:
                 duration = float(s)  # Try to cast as a float
             except ValueError:
-                raise ValueError('Could not cast the string to a number.')
+                raise ValueError("Could not cast the string to a number.")
 
         return channel, direction, duration
-
 
     def process_action(self, command_str):
         channel, direction, duration = self.process_command(command_str)
         if channel in {0, 1, 2, 3}:
             logger.info(
-                f'Moving motor {channel}, direction {direction} for {duration} seconds.'
+                f"Moving motor {channel}, direction {direction} for {duration} seconds."
             )
             self.move_motor(channel, direction, duration)
-            logger.info(f'Poti values: {self.read_all_potis()}')
+            logger.info(f"Poti values: {self.read_all_potis()}")
         elif channel == 7:
             logger.info(
-                f'Moving motors 0 and 1, direction {direction} for {duration} seconds.'
+                f"Moving motors 0 and 1, direction {direction} for {duration} seconds."
             )
             self.move_motor(0, direction, duration)
             self.move_motor(1, direction, duration)
-            logger.info(f'Poti values: {self.read_all_potis()}')
+            logger.info(f"Poti values: {self.read_all_potis()}")
         elif channel == 8:
             logger.info(
-                f'Moving motors 2 and 3, direction {direction} for {duration} seconds.'
+                f"Moving motors 2 and 3, direction {direction} for {duration} seconds."
             )
             self.move_motor(2, direction, duration)
             self.move_motor(3, direction, duration)
-            logger.info(f'Poti values: {self.read_all_potis()}')
+            logger.info(f"Poti values: {self.read_all_potis()}")
         elif channel == 9:
-            logger.info(f'Poti values: {self.read_all_potis()}')
-                        
+            logger.info(f"Poti values: {self.read_all_potis()}")
+
 
 # -------
 
@@ -247,11 +285,11 @@ class Motorroller:
 def start_interactive_mode(motorroller):
     while True:
         try:
-            command_str = input('Enter command or ctrl-C to abort-->')
+            command_str = input("Enter command or ctrl-C to abort-->")
             motorroller.process_action(command_str)
 
         except (EOFError, KeyboardInterrupt):
-            logger.info('\nUser input cancelled. Aborting...')
+            logger.info("\nUser input cancelled. Aborting...")
             break
 
         except ValueError as e:
@@ -264,80 +302,86 @@ def start_single_mode(motorroller, command_str_list):
 
 
 def start_server_mode():
-    logger.info('Client / Server mode not implemented yet.')
+    logger.info("Client / Server mode not implemented yet.")
 
 
 # -------
 
 
 def main():
-    parser = argparse.ArgumentParser(prog='motorroller')
+    parser = argparse.ArgumentParser(prog="motorroller")
     parser.add_argument(
-        '-c',
-        '--command',
-        nargs='+',
+        "-c",
+        "--command",
+        nargs="+",
         type=str,
-        help='Enter command as an argument.',
+        help="Enter command as an argument.",
         default=None,
     )
     parser.add_argument(
-        '--server',
+        "--server",
         action=argparse.BooleanOptionalAction,
-        help='Start in client / server mode.',
+        help="Start in client / server mode.",
     )
     parser.add_argument(
-        '-v', '--version', action='version', version=__version__, help='Print version.'
+        "-v", "--version", action="version", version=__version__, help="Print version."
     )
     parser.add_argument(
-        '-s',
-        '--speed',
-        nargs='?',
+        "-s",
+        "--speed",
+        nargs="?",
         type=int,
         const=200,
         default=200,
-        help='Motor speed.',
+        help="Motor speed.",
     )
-    parser.add_argument('-l', '--log', nargs=1, type=str,
-                        help='Path and name of the log file.')
-    
-    parser.add_argument('--config', nargs=1, type=str, default=None,
-                        help='Path and name of the config file.')
+    parser.add_argument(
+        "-l", "--log", nargs=1, type=str, help="Path and name of the log file."
+    )
+
+    parser.add_argument(
+        "--config",
+        nargs=1,
+        type=str,
+        default=None,
+        help="Path and name of the config file.",
+    )
 
     logger.remove(0)
-    logger.add(sys.stdout, level='INFO')
-    #logger.patch(lambda record: record.update(name=record["file"].name))
+    logger.add(sys.stdout, level="INFO")
+    # logger.patch(lambda record: record.update(name=record["file"].name))
 
     args = parser.parse_args()
     speed = args.speed
     if speed > 1200:
-        logger.info(f'Given speed {speed} is not so secure. Limitting to 1200.')
+        logger.info(f"Given speed {speed} is not so secure. Limitting to 1200.")
         speed = 1200
-        
+
     # read config file
     conf = None
     if args.config:
-        logger.info('Config file has been provided.')
+        logger.info("Config file has been provided.")
         with open(args.config, "rb") as f:
             conf = tomllib.load(f)
-    
+
     # ready to go
     motorroller = Motorroller(speed, conf)
-        
+
     if args.log:
         outfilename = args.log[0]
         # all levels
-        logger.add(f'{outfilename}.log')
+        logger.add(f"{outfilename}.log")
 
     if args.command:
-        logger.info('Running individual commands.')
+        logger.info("Running individual commands.")
         start_single_mode(motorroller, args.command)
 
     elif args.server:
-        logger.info('Starting client / server mode.')
+        logger.info("Starting client / server mode.")
         start_server_mode(motorroller)
 
     else:
-        logger.info('Starting interactive mode.')
+        logger.info("Starting interactive mode.")
         start_interactive_mode(motorroller)
 
     motorroller.closedown()
@@ -345,5 +389,5 @@ def main():
 
 
 # -----
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()
