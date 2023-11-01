@@ -1,6 +1,6 @@
 # Config and calibration file for motors
 
-# Entry for every motor
+# Value entry for every motor
 [mot0]
 # Absolute minimum and maximum in mm
 limit_outside = 40
@@ -8,23 +8,26 @@ limit_inside = 60
 # calibration points, use either floats or ints
 cal_points = [[60, 1680], [46.5, 2058.0]]
 
+# Value entry for every motor
 [mot1]
 # Absolute minimum and maximum in mm
-min = 20
-max = 40
+limit_outside = 40
+limit_inside = 60
 # calibration points, use either floats or ints
-cal = [[60, 1680], [46.5, 2058.0]]
+cal_points = [[60, 1680], [46.5, 2058.0]]
 
+# Value entry for every motor
 [mot2]
 # Absolute minimum and maximum in mm
-min = 20
-max = 40
+limit_outside = 40
+limit_inside = 60
 # calibration points, use either floats or ints
-cal = [[60, 1680], [46.5, 2058.0]]
+cal_points = [[60, 1680], [46.5, 2058.0]]
 
+# Value entry for every motor
 [mot3]
 # Absolute minimum and maximum in mm
-min = 20
-max = 40
+limit_outside = 40
+limit_inside = 60
 # calibration points, use either floats or ints
-cal = [[60, 1680], [46.5, 2058.0]]
+cal_points = [[60, 1680], [46.5, 2058.0]]

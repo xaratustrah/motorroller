@@ -135,7 +135,7 @@ class Motorroller:
 
         if channel == 0:
             # first set the flags
-            # driver_select, motor_select = 0, 0
+            driver_select, motor_select = 0, 0
 
             # then check limits according to config file
             if self.config_dic:
@@ -146,34 +146,144 @@ class Motorroller:
                 limit_outside = self.config_dic["mot0"]["limit_outside"]
                 p1 = self.config_dic["mot0"]["cal_points"][0]
                 p2 = self.config_dic["mot0"]["cal_points"][1]
-                print(direction, limit_inside, limit_outside, p1, p2, self.get_adcval_from_mm(limit_inside, p1, p2), self.get_adcval_from_mm(limit_outside, p1, p2))
-                
-                if pot0 <= self.get_adcval_from_mm(limit_inside, p1, p2) and direction == "ccw":
+                logger.info(
+                    f"Using calibration points: {p1, p2}, direction {direction}, inside limit {limit_inside} and outside limit {limit_outside}"
+                )
+
+                if (
+                    pot0 <= self.get_adcval_from_mm(limit_inside, p1, p2)
+                    and direction == "ccw"
+                ):
                     logger.error(
                         "Motor 0 limit_inside position reached. Cannot move any further in that direction."
                     )
                     return
                 elif (
-                    pot0 >= self.get_adcval_from_mm(limit_outside, p1, p2) and direction == "clw"
+                    pot0 >= self.get_adcval_from_mm(limit_outside, p1, p2)
+                    and direction == "clw"
                 ):
                     logger.error(
                         "Motor 0 limit_outside position reached. Cannot move any further in that direction."
                     )
                     return
                 else:
-                    logger.info("Motor 0 still in the given range of calibration file. Moving...")
+                    logger.info(
+                        "Motor 0 still in the given range of calibration file. Moving..."
+                    )
 
-        driver_select, motor_select = (
-            (0, 0)
-            if channel == 0
-            else (0, 1)
-            if channel == 1
-            else (1, 0)
-            if channel == 2
-            else (1, 1)
-            if channel == 3
-            else (None, None)
-        )
+        if channel == 1:
+            # first set the flags
+            driver_select, motor_select = 0, 1
+
+            # then check limits according to config file
+            if self.config_dic:
+                logger.info(
+                    "Checking position values with the limits provided in the calibration file before moving."
+                )
+                limit_inside = self.config_dic["mot1"]["limit_inside"]
+                limit_outside = self.config_dic["mot1"]["limit_outside"]
+                p1 = self.config_dic["mot1"]["cal_points"][0]
+                p2 = self.config_dic["mot1"]["cal_points"][1]
+                logger.info(
+                    f"Using calibration points: {p1, p2}, direction {direction}, inside limit {limit_inside} and outside limit {limit_outside}"
+                )
+
+                if (
+                    pot0 <= self.get_adcval_from_mm(limit_inside, p1, p2)
+                    and direction == "ccw"
+                ):
+                    logger.error(
+                        "Motor 1 limit_inside position reached. Cannot move any further in that direction."
+                    )
+                    return
+                elif (
+                    pot0 >= self.get_adcval_from_mm(limit_outside, p1, p2)
+                    and direction == "clw"
+                ):
+                    logger.error(
+                        "Motor 1 limit_outside position reached. Cannot move any further in that direction."
+                    )
+                    return
+                else:
+                    logger.info(
+                        "Motor 1 still in the given range of calibration file. Moving..."
+                    )
+
+        if channel == 2:
+            # first set the flags
+            driver_select, motor_select = 1, 0
+
+            # then check limits according to config file
+            if self.config_dic:
+                logger.info(
+                    "Checking position values with the limits provided in the calibration file before moving."
+                )
+                limit_inside = self.config_dic["mot2"]["limit_inside"]
+                limit_outside = self.config_dic["mot2"]["limit_outside"]
+                p1 = self.config_dic["mot2"]["cal_points"][0]
+                p2 = self.config_dic["mot2"]["cal_points"][1]
+                logger.info(
+                    f"Using calibration points: {p1, p2}, direction {direction}, inside limit {limit_inside} and outside limit {limit_outside}"
+                )
+
+                if (
+                    pot0 <= self.get_adcval_from_mm(limit_inside, p1, p2)
+                    and direction == "ccw"
+                ):
+                    logger.error(
+                        "Motor 2 limit_inside position reached. Cannot move any further in that direction."
+                    )
+                    return
+                elif (
+                    pot0 >= self.get_adcval_from_mm(limit_outside, p1, p2)
+                    and direction == "clw"
+                ):
+                    logger.error(
+                        "Motor 2 limit_outside position reached. Cannot move any further in that direction."
+                    )
+                    return
+                else:
+                    logger.info(
+                        "Motor 2 still in the given range of calibration file. Moving..."
+                    )
+
+        if channel == 3:
+            # first set the flags
+            driver_select, motor_select = 1, 1
+
+            # then check limits according to config file
+            if self.config_dic:
+                logger.info(
+                    "Checking position values with the limits provided in the calibration file before moving."
+                )
+                limit_inside = self.config_dic["mot3"]["limit_inside"]
+                limit_outside = self.config_dic["mot3"]["limit_outside"]
+                p1 = self.config_dic["mot3"]["cal_points"][0]
+                p2 = self.config_dic["mot3"]["cal_points"][1]
+                logger.info(
+                    f"Using calibration points: {p1, p2}, direction {direction}, inside limit {limit_inside} and outside limit {limit_outside}"
+                )
+
+                if (
+                    pot0 <= self.get_adcval_from_mm(limit_inside, p1, p2)
+                    and direction == "ccw"
+                ):
+                    logger.error(
+                        "Motor 3 limit_inside position reached. Cannot move any further in that direction."
+                    )
+                    return
+                elif (
+                    pot0 >= self.get_adcval_from_mm(limit_outside, p1, p2)
+                    and direction == "clw"
+                ):
+                    logger.error(
+                        "Motor 3 limit_outside position reached. Cannot move any further in that direction."
+                    )
+                    return
+                else:
+                    logger.info(
+                        "Motor 3 still in the given range of calibration file. Moving..."
+                    )
 
         # now you can start moving the motors
         gpio.output(DRIVER_SELECT, driver_select)
