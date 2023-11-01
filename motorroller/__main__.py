@@ -340,11 +340,11 @@ def main():
     )
 
     parser.add_argument(
-        "--config",
+        "--cal",
         nargs=1,
         type=str,
         default=None,
-        help="Path and name of the config file.",
+        help="Path and name of the calibration file.",
     )
 
     logger.remove(0)
@@ -358,14 +358,14 @@ def main():
         speed = 1200
 
     # read config file
-    conf = None
-    if args.config:
-        logger.info("Config file has been provided.")
-        with open(args.config, "rb") as f:
-            conf = tomllib.load(f)
+    cal_dic = None
+    if args.cal:
+        logger.info("Calibration file has been provided.")
+        with open(args.cal, "rb") as f:
+            cal_dic = tomllib.load(f)
 
     # ready to go
-    motorroller = Motorroller(speed, conf)
+    motorroller = Motorroller(speed, cal_dic)
 
     if args.log:
         outfilename = args.log[0]
