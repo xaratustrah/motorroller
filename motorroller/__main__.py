@@ -490,20 +490,18 @@ def main():
     cal_dic = None
     if args.cal:
         logger.info("Calibration file has been provided.")
- #       try:
-        # Load calibration file
-        with open(args.cal[0], "rb") as f:
-            cal_dic = tomllib.load(f)
-            data = tomllib.load(f)
-            
-        # check structure of calibration file
-        for key in ['mot0', 'mot1', 'mot2', 'mot3']:
-            assert key in data.keys()
-            for keykey in ['limit_outside', 'limit_inside', 'cal_points']:
-                assert keykey in data[key].keys()
-#        except:
-#            logger.error('Calibration file does not have required format.')
-#            exit()
+        try:
+            # Load calibration file
+            with open(args.cal[0], "rb") as f:
+                cal_dic = tomllib.load(f)
+            # check structure of calibration file
+            for key in ['mot0', 'mot1', 'mot2', 'mot3']:
+                assert key in cal_dic.keys()
+                for keykey in ['limit_outside', 'limit_inside', 'cal_points']:
+                    assert keykey in cal_dic[key].keys()
+        except:
+            logger.error('Calibration file does not have required format.')
+            exit()
     else:
         logger.warning(
             "No calibration file provided, so limits are unknown. Proceed with caution!"
