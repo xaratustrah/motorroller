@@ -378,11 +378,7 @@ class Motorroller:
         poti_string = (
             f"Poti values: {self.read_all_potis()}"
             if not self.config_dic
-            else f"Poti values: {pot_vals}, Positions: \
-                {self.get_mm_from_adcval(pot_vals[0], self.config_dic["mot0"]["cal_points"][0], self.config_dic["mot0"]["cal_points"][1]):.2f}, \
-                {self.get_mm_from_adcval(pot_vals[1], self.config_dic["mot1"]["cal_points"][0], self.config_dic["mot1"]["cal_points"][1]):.2f}, \
-                {self.get_mm_from_adcval(pot_vals[2], self.config_dic["mot2"]["cal_points"][0], self.config_dic["mot2"]["cal_points"][1]):.2f}, \
-                {self.get_mm_from_adcval(pot_vals[3], self.config_dic["mot3"]["cal_points"][0], self.config_dic["mot3"]["cal_points"][1]):.2f}"
+            else f"Poti values: {pot_vals}, Positions: {self.get_mm_from_adcval(pot_vals[0], self.config_dic["mot0"]["cal_points"][0], self.config_dic["mot0"]["cal_points"][1]):.2f}, {self.get_mm_from_adcval(pot_vals[1], self.config_dic["mot1"]["cal_points"][0], self.config_dic["mot1"]["cal_points"][1]):.2f}, {self.get_mm_from_adcval(pot_vals[2], self.config_dic["mot2"]["cal_points"][0], self.config_dic["mot2"]["cal_points"][1]):.2f}, {self.get_mm_from_adcval(pot_vals[3], self.config_dic["mot3"]["cal_points"][0], self.config_dic["mot3"]["cal_points"][1]):.2f}"
         )
         logger.info(poti_string)
 
