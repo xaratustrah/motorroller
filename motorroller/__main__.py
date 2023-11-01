@@ -361,7 +361,7 @@ def main():
     cal_dic = None
     if args.cal:
         logger.info("Calibration file has been provided.")
-        with open(args.cal, "rb") as f:
+        with open(args.cal[0], "rb") as f:
             cal_dic = tomllib.load(f)
 
     # ready to go
