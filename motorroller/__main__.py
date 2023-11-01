@@ -490,8 +490,11 @@ def main():
     cal_dic = None
     if args.cal:
         logger.info("Calibration file has been provided.")
-        with open(args.cal[0], "rb") as f:
-            cal_dic = tomllib.load(f)
+        try:
+            with open(args.cal[0], "rb") as f:
+                cal_dic = tomllib.load(f)
+        except:
+            logger.error('Calibration file does not have required format.')
     else:
         logger.warning(
             "No calibration file provided, so limits are unknown. Proceed with caution!"
