@@ -495,6 +495,7 @@ def main():
                 cal_dic = tomllib.load(f)
         except:
             logger.error('Calibration file does not have required format.')
+            exit()
     else:
         logger.warning(
             "No calibration file provided, so limits are unknown. Proceed with caution!"
