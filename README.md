@@ -15,7 +15,7 @@ sudo apt udpate
 sudo apt -y install git python3-pip
 ```
 
-The clone the repository and go inside that directory and type (you may need to provide the command line arg `--break-system-packages` before the `-r` below, depending on your system, and how you are using your Raspberry Pi. Please use with care!):
+The clone the repository and go inside that directory and type (you may need to provide the command line arg `--break-system-packages` before the `-r` and before `.` below, depending on your system, and how you are using your Raspberry Pi. Please use with care!):
 
 ```
 pip install -r requirements.txt
@@ -33,15 +33,17 @@ pip3 uninstall motorroller
 
 ### Running modes
 
-Motoroller can be run in three different modes. It accepts commands in interactive, command line and client / server mode.
+Motoroller can be run in three different modes. It accepts commands in interactive, command line and client / server mode. During movement, pressing ctrl-C will stop the movement and exit gracefully.
 
 #### Interactive mode
 
-this is the default mode. There will be an input prompt for entering commands. The readline history is activated for convenience. Just run:
+this is the default mode. There will be an input prompt for entering commands. Just run:
 
 ```
 motoroller
 ```
+
+The readline history is activated for convenience. You can revisit your older commands by pressing arrow up.
 
 #### Commands as arguments
 Use one or several commands directly in the command prompt:

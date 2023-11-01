@@ -414,7 +414,7 @@ class Motorroller:
 def start_interactive_mode(motorroller):
     while True:
         try:
-            command_str = input("Enter command or ctrl-C to abort-->")
+            command_str = input("Enter command or ctrl-C or ctrl-D to abort-->")
             motorroller.process_action(command_str)
 
         except (EOFError, KeyboardInterrupt):
@@ -426,8 +426,17 @@ def start_interactive_mode(motorroller):
 
 
 def start_single_mode(motorroller, command_str_list):
-    for command in command_str_list:
-        motorroller.process_action(command)
+    try:
+        for command in command_str_list:
+            motorroller.process_action(command)
+
+    except (EOFError, KeyboardInterrupt):
+        logger.success("\nUser input cancelled. Aborting...")
+        break
+
+    except ValueError as e:
+        print(e)
+
 
 
 def start_server_mode():
