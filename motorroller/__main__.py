@@ -128,7 +128,12 @@ class Motorroller:
             pot1 += self.read_poti(1)
             pot2 += self.read_poti(2)
             pot3 += self.read_poti(3)
-        return [int(pot0 / num_avg), int(pot1 / num_avg), int(pot2 / num_avg), int(pot3 / num_avg)]
+        return [
+            int(pot0 / num_avg),
+            int(pot1 / num_avg),
+            int(pot2 / num_avg),
+            int(pot3 / num_avg),
+        ]
 
     def move_motor(self, channel, direction, duration):
         # first read the potis
@@ -370,9 +375,13 @@ class Motorroller:
 
     def log_poti_values(self):
         pot_vals = self.read_all_potis()
-        poti_string = f"Poti values: {self.read_all_potis()}" if not self.config_dic else f"Poti values: {pot_vals}, Positions: {self.get_mm_from_adcval(pot_vals[0]), self.get_mm_from_adcval(pot_vals[1], self.get_mm_from_adcval(pot_vals[2], self.get_mm_from_adcval(pot_vals[3]}"
+        poti_string = (
+            f"Poti values: {self.read_all_potis()}"
+            if not self.config_dic
+            else f"Poti values: {pot_vals}, Positions: {self.get_mm_from_adcval(pot_vals[0]), self.get_mm_from_adcval(pot_vals[1]), self.get_mm_from_adcval(pot_vals[2]), self.get_mm_from_adcval(pot_vals[3])}"
+        )
         logger.info(poti_string)
-        
+
     def process_action(self, command_str):
         channel, direction, duration = self.process_command(command_str)
         if channel in {0, 1, 2, 3}:
@@ -397,6 +406,7 @@ class Motorroller:
             self.log_poti_values()
         elif channel == 9:
             self.log_poti_values()
+
 
 # -------
 
@@ -483,7 +493,9 @@ def main():
         with open(args.cal[0], "rb") as f:
             cal_dic = tomllib.load(f)
     else:
-        logger.warning('No calibration file provided, so limits are unknown. Proceed with caution!')
+        logger.warning(
+            "No calibration file provided, so limits are unknown. Proceed with caution!"
+        )
 
     # ready to go
     motorroller = Motorroller(speed, cal_dic)
