@@ -115,7 +115,7 @@ limit_outside = 40
 limit_inside = 60
 
 # Provide two calibration points
-# For calibration points, within each pair, please use either floats or ints
+# For calibration points, within each pair, please use either floats or ints, do not mix.
 # First value is in mm, second the ADC / poti value
 cal_points = [[49, 1864], [83, 1072]]
 ```

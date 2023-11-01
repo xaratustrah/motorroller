@@ -37,13 +37,13 @@ DRIVER_SELECT = 38
 
 
 class Motorroller:
-    def __init__(self, motor_speed, config_dic):
+    def __init__(self, motor_speed, calibration_dic):
         self.motor_speed = motor_speed
         self.brk_list = [BRK0, BRK1, BRK2, BRK3]
         self.spi_init()
         self.gpio_setup()
         self.gpio_reset()
-        self.config_dic = config_dic
+        self.calibration_dic = calibration_dic
 
     def gpio_setup(self):
         # gpio Setup
@@ -144,14 +144,14 @@ class Motorroller:
             driver_select, motor_select = 0, 0
 
             # then check limits according to config file
-            if self.config_dic:
+            if self.calibration_dic:
                 logger.info(
                     "Checking position values with the limits provided in the calibration file before moving."
                 )
-                limit_inside = self.config_dic["mot0"]["limit_inside"]
-                limit_outside = self.config_dic["mot0"]["limit_outside"]
-                p1 = self.config_dic["mot0"]["cal_points"][0]
-                p2 = self.config_dic["mot0"]["cal_points"][1]
+                limit_inside = self.calibration_dic["mot0"]["limit_inside"]
+                limit_outside = self.calibration_dic["mot0"]["limit_outside"]
+                p1 = self.calibration_dic["mot0"]["cal_points"][0]
+                p2 = self.calibration_dic["mot0"]["cal_points"][1]
                 logger.info(
                     f"Using calibration points: {p1, p2}, direction {direction}, inside limit {limit_inside} and outside limit {limit_outside}"
                 )
@@ -182,14 +182,14 @@ class Motorroller:
             driver_select, motor_select = 0, 1
 
             # then check limits according to config file
-            if self.config_dic:
+            if self.calibration_dic:
                 logger.info(
                     "Checking position values with the limits provided in the calibration file before moving."
                 )
-                limit_inside = self.config_dic["mot1"]["limit_inside"]
-                limit_outside = self.config_dic["mot1"]["limit_outside"]
-                p1 = self.config_dic["mot1"]["cal_points"][0]
-                p2 = self.config_dic["mot1"]["cal_points"][1]
+                limit_inside = self.calibration_dic["mot1"]["limit_inside"]
+                limit_outside = self.calibration_dic["mot1"]["limit_outside"]
+                p1 = self.calibration_dic["mot1"]["cal_points"][0]
+                p2 = self.calibration_dic["mot1"]["cal_points"][1]
                 logger.info(
                     f"Using calibration points: {p1, p2}, direction {direction}, inside limit {limit_inside} and outside limit {limit_outside}"
                 )
@@ -220,14 +220,14 @@ class Motorroller:
             driver_select, motor_select = 1, 0
 
             # then check limits according to config file
-            if self.config_dic:
+            if self.calibration_dic:
                 logger.info(
                     "Checking position values with the limits provided in the calibration file before moving."
                 )
-                limit_inside = self.config_dic["mot2"]["limit_inside"]
-                limit_outside = self.config_dic["mot2"]["limit_outside"]
-                p1 = self.config_dic["mot2"]["cal_points"][0]
-                p2 = self.config_dic["mot2"]["cal_points"][1]
+                limit_inside = self.calibration_dic["mot2"]["limit_inside"]
+                limit_outside = self.calibration_dic["mot2"]["limit_outside"]
+                p1 = self.calibration_dic["mot2"]["cal_points"][0]
+                p2 = self.calibration_dic["mot2"]["cal_points"][1]
                 logger.info(
                     f"Using calibration points: {p1, p2}, direction {direction}, inside limit {limit_inside} and outside limit {limit_outside}"
                 )
@@ -258,14 +258,14 @@ class Motorroller:
             driver_select, motor_select = 1, 1
 
             # then check limits according to config file
-            if self.config_dic:
+            if self.calibration_dic:
                 logger.info(
                     "Checking position values with the limits provided in the calibration file before moving."
                 )
-                limit_inside = self.config_dic["mot3"]["limit_inside"]
-                limit_outside = self.config_dic["mot3"]["limit_outside"]
-                p1 = self.config_dic["mot3"]["cal_points"][0]
-                p2 = self.config_dic["mot3"]["cal_points"][1]
+                limit_inside = self.calibration_dic["mot3"]["limit_inside"]
+                limit_outside = self.calibration_dic["mot3"]["limit_outside"]
+                p1 = self.calibration_dic["mot3"]["cal_points"][0]
+                p2 = self.calibration_dic["mot3"]["cal_points"][1]
                 logger.info(
                     f"Using calibration points: {p1, p2}, direction {direction}, inside limit {limit_inside} and outside limit {limit_outside}"
                 )
@@ -377,8 +377,8 @@ class Motorroller:
         pot_vals = self.read_all_potis()
         poti_string = (
             f"Poti values: {self.read_all_potis()}"
-            if not self.config_dic
-            else f"""Poti values: {pot_vals}, Positions in mm: {self.get_mm_from_adcval(pot_vals[0], self.config_dic["mot0"]["cal_points"][0], self.config_dic["mot0"]["cal_points"][1]):.2f}, {self.get_mm_from_adcval(pot_vals[1], self.config_dic["mot1"]["cal_points"][0], self.config_dic["mot1"]["cal_points"][1]):.2f}, {self.get_mm_from_adcval(pot_vals[2], self.config_dic["mot2"]["cal_points"][0], self.config_dic["mot2"]["cal_points"][1]):.2f}, {self.get_mm_from_adcval(pot_vals[3], self.config_dic["mot3"]["cal_points"][0], self.config_dic["mot3"]["cal_points"][1]):.2f}"""
+            if not self.calibration_dic
+            else f"""Poti values: {pot_vals}, Positions in mm: {self.get_mm_from_adcval(pot_vals[0], self.calibration_dic["mot0"]["cal_points"][0], self.calibration_dic["mot0"]["cal_points"][1]):.2f}, {self.get_mm_from_adcval(pot_vals[1], self.calibration_dic["mot1"]["cal_points"][0], self.calibration_dic["mot1"]["cal_points"][1]):.2f}, {self.get_mm_from_adcval(pot_vals[2], self.calibration_dic["mot2"]["cal_points"][0], self.calibration_dic["mot2"]["cal_points"][1]):.2f}, {self.get_mm_from_adcval(pot_vals[3], self.calibration_dic["mot3"]["cal_points"][0], self.calibration_dic["mot3"]["cal_points"][1]):.2f}"""
         )
         logger.info(poti_string)
 
