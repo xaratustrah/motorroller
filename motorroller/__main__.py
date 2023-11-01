@@ -142,21 +142,22 @@ class Motorroller:
                 logger.info(
                     "Checking position values with the limits provided in the calibration file before moving."
                 )
-                mmin = self.config_dic["mot0"]["min"]
-                mmax = self.config_dic["mot0"]["max"]
-                p1 = self.config_dic["mot0"]["cal"][0]
-                p2 = self.config_dic["mot0"]["cal"][1]
-                print(direction, mmin, mmax, p1, p2, self.get_adcval_from_mm(mmin, p1, p2), self.get_adcval_from_mm(mmax, p1, p2))
-                if pot0 >= self.get_adcval_from_mm(mmin, p1, p2) and direction == "ccw":
+                limit_inside = self.config_dic["mot0"]["limit_inside"]
+                limit_outside = self.config_dic["mot0"]["limit_outside"]
+                p1 = self.config_dic["mot0"]["cal_points"][0]
+                p2 = self.config_dic["mot0"]["cal_oints"][1]
+                print(direction, limit_inside, limit_outside, p1, p2, self.get_adcval_from_mm(limit_inside, p1, p2), self.get_adcval_from_mm(limit_outside, p1, p2))
+                
+                if pot0 <= self.get_adcval_from_mm(limit_inside, p1, p2) and direction == "ccw":
                     logger.error(
-                        "Motor 0 min position reached. Cannot move any further in that direction."
+                        "Motor 0 limit_inside position reached. Cannot move any further in that direction."
                     )
                     return
                 elif (
-                    pot0 <= self.get_adcval_from_mm(mmax, p1, p2) and direction == "clw"
+                    pot0 >= self.get_adcval_from_mm(limit_outside, p1, p2) and direction == "clw"
                 ):
                     logger.error(
-                        "Motor 0 max position reached. Cannot move any further in that direction."
+                        "Motor 0 limit_outside position reached. Cannot move any further in that direction."
                     )
                     return
                 else:
