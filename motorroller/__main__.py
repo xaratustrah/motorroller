@@ -361,7 +361,7 @@ class Motorroller:
         if len(cmd) == 3:
             s = cmd[2]
         else:
-            s = cmd[2:-1]
+            s = cmd[2:]
 
         try:
             duration = int(s)  # Try to cast as an integer
