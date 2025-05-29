@@ -337,7 +337,7 @@ class Motorroller:
                     Format is XYZ, where X is one of the following:
 
                     0 --> Motor 0
-                    1 --> Motor 
+                    1 --> Motor 1
                     2 --> Motor 2
                     3 --> Motor 3
 
