@@ -508,8 +508,7 @@ def main():
         logger.info("Calibration file has been provided.")
         try:
             # Load calibration file
-            with open(args.cal[0], "rb") as f:
-                cal_dic = toml.load(cal_dic)
+            cal_dic = toml.load(args.cal[0])
             validate_config(cal_dic)
         except:
             logger.error('Calibration file does not have required format.')
