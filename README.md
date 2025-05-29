@@ -131,6 +131,8 @@ Please note that in the current hardware configuration, as motors move inside:
 
 ## Hardware description
 
+Although Raspberry Pi offers hardware PWM, `motoroller` uses the software PWM based on `RPi.PWM` which is assigned to the pins 16 and 18.
+
 #### Board and Schematics
 
 ![Motoroller](https://raw.githubusercontent.com/xaratustrah/motorroller/master/rsrc/motorroller_case.png)
