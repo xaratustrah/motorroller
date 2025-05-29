@@ -4,27 +4,49 @@
 <img src="https://raw.githubusercontent.com/xaratustrah/motorroller/master/rsrc/motorroller.png" width="512">
 </div>
 
-Motoroller is an easy to use open hardware open software stepper motor controller using Raspberry Pi. Depending on which driver you use, you can controll have 5 phase or 2 phase stepper motors. In this current configuration, it can control up to 4 motors. Also supported are the readout of linear potentiometers.
+Motoroller is an easy to use open hardware open software stepper motor controller using Raspberry Pi. Depending on which driver you use, you can control 5 phase or 2 phase stepper motors. In this current configuration, it can control up to 4 motors. Also supported are the readout of linear potentiometers.
 
 
-## Installation
-Please download the latest version of [Raspberry Pi OS Lite](https://www.raspberrypi.com/software/). Newest versions require setting up username / password already in the imager tool. You can also enable SSH from there. Then you can expand file system using the script `raspi-config`. Then you need a couple of things:
+## Software installation
 
-```
+### Raspberry Pi OS
+Please download the latest version of [Raspberry Pi OS Lite](https://www.raspberrypi.com/software/). Newest versions require setting up username / password already in the imager tool. You can also enable SSH from there.
+
+### Raspi-config
+Then you can expand file system using the script `raspi-config` and also enable `SPI`.
+
+
+### Packages
+Install some useful packages:
+
+```bash
 sudo apt udpate
-sudo apt -y install git python3-pip
-```
-
-Then clone the repository and go inside that directory and type (you may need to provide the command line arg `--break-system-packages` before the `-r` and before `.` below, depending on your system, and how you are using your Raspberry Pi. Please use with care!):
+sudo apt install -y screen mc tree git python3-pip emacs-nox htop sshfs
 
 ```
-pip install -r requirements.txt
-pip3 install .
+
+Then install python packages. You may need to provide the command line arg `--break-system-packages`  depending on your system, but be careful with that:
+
+```bash
+pip3 install --break-system-packages RPi.GPIO spidev loguru
+
 ```
 
-For uninstalling you can type:
+### Repository
 
+Clone and install the repository:
+
+```bash
+cd git
+git clone https://github.com/xaratustrah/motorroller
+cd motorroller
+pip3 install --break-system-packages -r requirements.txt
+pip3 install --break-system-packages .
 ```
+
+For uninstalling both you can type:
+
+```bash
 pip3 uninstall motorroller
 ```
 
@@ -39,7 +61,7 @@ Motoroller can be run in three different modes. It accepts commands in interacti
 
 this is the default mode. There will be an input prompt for entering commands. Just run:
 
-```
+```bash
 motoroller
 ```
 
@@ -63,19 +85,22 @@ This mode is not implemented yet.
 
 Format is XYZ, where X is one of the following:
 
-    0 --> Motor 0
-    1 --> Motor 
-    2 --> Motor 2
-    3 --> Motor 3
 
-    7 --> Both motors 0 and 1
-    8 --> Both motors 2 and 3
+```
+0 --> Motor 0
+1 --> Motor 
+2 --> Motor 2
+3 --> Motor 3
 
-    9 --> Read out potentiometers only, the other two positions will be ignored
+7 --> Both motors 0 and 1
+8 --> Both motors 2 and 3
 
-    Y is the direction either I for in or O for out (case insensitive)
+9 --> Read out potentiometers only, the other two positions will be ignored
 
-    Z is the number of steps (int)
+Y is the direction either I for in or O for out (case insensitive)
+
+Z is the number of steps (int)
+```
 
 For example `0i200` means move motor 0 inside 200 steps.
 
@@ -90,16 +115,8 @@ A logger file name can be provided in order to put actions and readout informati
 motorroller --log ./logfile
 ```
 
-#### Motor speed
-
-The switch `--speed` is for setting the rotation speed.
-
-```
-motorroller --speed 1000 --log ./logfile
-```
-
 #### Calibration file
-Working with a calibration file insures a safer operation. In the calibration file, which is [TOML format]() limits can be set for every motor. You can provide the name of the calibration file as a command line argument:
+Working with a calibration file insures a safer operation. In the calibration file, which is [TOML format](https://toml.io/en/) limits can be set for every motor. You can provide the name of the calibration file as a command line argument:
 
 ```
 motorroller --speed 1000 --log ./logfile --cal clibration.toml
@@ -118,7 +135,7 @@ limit_inside = 60
 
 # Provide two calibration points
 # For calibration points, within each pair, please use either floats or ints, do not mix.
-# First value is in mm, second the ADC / poti value
+# First value is in mm, second the ADC / potentiometer value
 cal_points = [[49, 1864], [83, 1072]]
 ```
 
@@ -130,6 +147,9 @@ Please note that in the current hardware configuration, as motors move inside:
 
 
 ## Hardware description
+
+This version of `motorroller` does not use hardware or software PWM, but instead, for increase of accuracy, it uses exact number of steps. This way, you can keep track of the motor motions for more scalability and reproducibility.
+
 
 #### Board and Schematics
 
@@ -177,7 +197,7 @@ Here are some suggestions for an upgrade. In case a PCB is created for the proje
 
 * Use SPI based IO-expander **MCP23S08** in order to read the status of the end switches. This one would share the same SCLK, MOSI and MISO lines with the MCP2308 but would need its own chip select signal. This would be then connected to **pin 26** of the Raspberry Pi header.
 
-In order to have the analog signals of the potentiometers and the digitial signals of the end swtiches, one should use the 10-pin header, and connect via flat cable to 9-pin D-SUB connector to the front plate. **Please notice, that the 10-pin connector has a different counting direction if connected to flat-cable D-SUB connectors!**
+In order to have the analog signals of the potentiometers and the digital signals of the end switches, one should use the 10-pin header, and connect via flat cable to 9-pin D-SUB connector to the front plate. **Please notice, that the 10-pin connector has a different counting direction if connected to flat-cable D-SUB connectors!**
 
 * Change relay order
 
@@ -208,17 +228,20 @@ For the next revision, the relay order for the BRK signals could be made more sy
 
 * Level shifters
   
-This is a nice to have option, just add two level shofters for the CCW and CLW signals. In principle, a level shifter can also replace the darlington array IC ULN2003A , which is a bit of an overkill for the current purpose.
+This is a nice to have option, just add two level shifters for the CCW and CLW signals. In principle, a level shifter can also replace the darlington array IC ULN2003A , which is a bit of an overkill for the current purpose.
 
 #### Additional hints
 
-* Please note that the driver has direct opto coupler inputs, whereas the relay board has optocouplers that are already pulled up to 5V on one side.
+* Please note that the driver has direct opto-coupler inputs, whereas the relay board has opto-couplers that are already pulled up to 5V on one side.
 
-* Also please note that for the crimp tool you need to set level 8 for 0.75mm<sup>2</sup> which are the motor cables, and level 5 for 0.14mm<sup>2</sup> cables, which are the end switch and potentiometer cables.
+* For crimping the wires, please note that for the crimp tool you need to set level 8 for 0.75mm<sup>2</sup> which are the motor cables, and level 5 for 0.14mm<sup>2</sup> cables, which are the end switch and potentiometer cables.
 
-* On the motor side, the end swtiches are connected so that in the normal case they are connected to ground. If the end swtich is acticated, this connecttion is interrupted.
+* On the motor side, the end switches are connected so that in the normal case they are connected to ground. If the end switch is activated, this connection is interrupted.
   
 
+#### End switches
+
+Although end switches are connected in the hardware, please be aware the the software implementation of the end switches are not carried out in this release. So please move the motors with care.
 
 ## Licensing
 
