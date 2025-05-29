@@ -15,7 +15,7 @@ sudo apt udpate
 sudo apt -y install git python3-pip
 ```
 
-The clone the repository and go inside that directory and type (you may need to provide the command line arg `--break-system-packages` before the `-r` and before `.` below, depending on your system, and how you are using your Raspberry Pi. Please use with care!):
+Then clone the repository and go inside that directory and type (you may need to provide the command line arg `--break-system-packages` before the `-r` and before `.` below, depending on your system, and how you are using your Raspberry Pi. Please use with care!):
 
 ```
 pip install -r requirements.txt
@@ -33,7 +33,7 @@ pip3 uninstall motorroller
 
 ### Running modes
 
-Motoroller can be run in three different modes. It accepts commands in interactive, command line and client / server mode. During movement, pressing ctrl-C will stop the movement and exit gracefully.
+Motoroller can be run in three different modes. It accepts commands in interactive, command line and client / server mode. During movement, pressing `ctrl-C` will stop the movement and exit gracefully.
 
 #### Interactive mode
 
@@ -49,10 +49,10 @@ The readline history is activated for convenience. You can revisit your older co
 Use one or several commands directly in the command prompt:
 
 ```
-motoroller --command 0i1 0o1
+motoroller --command 0i200 0o200
 ```
 
-Moves motor 0 in and out for 1 seconds.
+Moves motor 0 in and out for 200 steps.
 
 
 #### Client / Server mode
@@ -75,16 +75,16 @@ Format is XYZ, where X is one of the following:
 
     Y is the direction either I for in or O for out (case insensitive)
 
-    Z is the duration in seconds (int or float
+    Z is the number of steps (int)
 
-For example `0i1` means move motor 0 inside 1 second long, whereas `1o3.456` means move motor 1 outside 3.456 seconds long
+For example `0i200` means move motor 0 inside 200 steps.
 
 ### Other features
-Following features work in combincatino with all obove mentioned operation modes:
+Following features work in combination with all above mentioned operation modes:
 
 #### Logger
 
-A logger file name can be provided in order to put actions and readout information together with a time stamp in a log file. You activate the logger by using the `--log` swtich:
+A logger file name can be provided in order to put actions and readout information together with a time stamp in a log file. You activate the logger by using the `--log` switch:
 
 ```
 motorroller --log ./logfile

@@ -5,7 +5,6 @@ Motorroller - Open hardware open software stepper motor controller
 """
 
 from time import sleep
-import readline
 import argparse
 import os, sys
 from loguru import logger
@@ -35,6 +34,7 @@ BRK3 = 33
 MOTOR_SELECT = 36
 DRIVER_SELECT = 38
 
+MINIMUM_DELAY = 0.0002
 
 class Motorroller:
     def __init__(self, motor_speed, calibration_dic):
@@ -288,30 +288,31 @@ class Motorroller:
         # now you can start moving the motors
         gpio.output(DRIVER_SELECT, driver_select)
         gpio.output(MOTOR_SELECT, motor_select)
+        
+        # disengaging the breaks
         gpio.output(self.brk_list[channel], 1)
-
-        # setup PWM: this has to be done here it seems
-        # that PWM forgets the settings after each stop
-        self.ccw_pwm.ChangeFrequency(self.motor_speed)
-        self.clw_pwm.ChangeFrequency(self.motor_speed)
 
         if direction == "ccw":
             
             for i in range(nsteps):
                 ramp = 0.02/((i+1)*10)
-                if ramp < delay:
-                    ramp = delay
-
-            
-            self.ccw_pwm.start(50)
-            sleep(duration)
-            self.ccw_pwm.stop()
+                if ramp < MINIMUM_DELAY:
+                    ramp = MINIMUM_DELAY
+                gpio.output(CCW, gpio.HIGH)
+                sleep(ramp)
+                gpio.output(CCW, gpio.LOW)
+                sleep(ramp)
         else:
-            self.clw_pwm.start(50)
-            sleep(duration)
-            self.clw_pwm.stop()
+            for i in range(nsteps):
+                ramp = 0.02/((i+1)*10)
+                if ramp < MINIMUM_DELAY:
+                    ramp = MINIMUM_DELAY
+                gpio.output(CLW, gpio.HIGH)
+                sleep(ramp)
+                gpio.output(CLW, gpio.LOW)
+                sleep(ramp)
 
-        # break off
+        # engaging the breaks again
         gpio.output(self.brk_list[channel], 0)
 
     def closedown(self):
@@ -349,7 +350,7 @@ class Motorroller:
 
                     Y is the direction either I for in or O for out (case insensitive)
 
-                    Z is the duration in seconds (int or float)\n
+                    Z is the number of steps (int) \n
                 """
             )
 
@@ -358,21 +359,18 @@ class Motorroller:
         # assign CCW to the direction of in
         direction = "ccw" if second_char in {"i", "I"} else "clw"
 
-        # Try to cast duration to both integer and float
+        # Try to cast number of steps to an integer
         if len(cmd) == 3:
             s = cmd[2]
         else:
             s = cmd[2:]
 
         try:
-            duration = int(s)  # Try to cast as an integer
+            nsteps = int(s)  # Try to cast as an integer
         except ValueError:
-            try:
-                duration = float(s)  # Try to cast as a float
-            except ValueError:
-                raise ValueError("Could not cast the string to a number.")
+            raise ValueError("Could not extract an integer from the command string.")
 
-        return channel, direction, duration
+        return channel, direction, nsteps
 
     def log_poti_values(self):
         pot_vals = self.read_all_potis()
@@ -384,26 +382,26 @@ class Motorroller:
         logger.info(poti_string)
 
     def process_action(self, command_str):
-        channel, direction, duration = self.process_command(command_str)
+        channel, direction, nsteps = self.process_command(command_str)
         if channel in {0, 1, 2, 3}:
             logger.info(
-                f"Moving motor {channel}, direction {direction} for {duration} seconds."
+                f"Moving motor {channel}, direction {direction} for {nsteps} steps."
             )
-            self.move_motor(channel, direction, duration)
+            self.move_motor(channel, direction, nsteps)
             self.log_poti_values()
         elif channel == 7:
             logger.info(
-                f"Moving motors 0 and 1, direction {direction} for {duration} seconds."
+                f"Moving motors 0 and 1, direction {direction} for {nsteps} steps."
             )
-            self.move_motor(0, direction, duration)
-            self.move_motor(1, direction, duration)
+            self.move_motor(0, direction, nsteps)
+            self.move_motor(1, direction, nsteps)
             self.log_poti_values()
         elif channel == 8:
             logger.info(
-                f"Moving motors 2 and 3, direction {direction} for {duration} seconds."
+                f"Moving motors 2 and 3, direction {direction} for {nsteps} steps."
             )
-            self.move_motor(2, direction, duration)
-            self.move_motor(3, direction, duration)
+            self.move_motor(2, direction, nsteps)
+            self.move_motor(3, direction, nsteps)
             self.log_poti_values()
         elif channel == 9:
             self.log_poti_values()
