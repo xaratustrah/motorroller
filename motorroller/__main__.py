@@ -59,12 +59,6 @@ class Motorroller:
         gpio.setup(MOTOR_SELECT, gpio.OUT)
         gpio.setup(DRIVER_SELECT, gpio.OUT)
 
-        # setup PWM
-        self.clw_pwm = gpio.PWM(CLW, self.motor_speed)
-        self.ccw_pwm = gpio.PWM(CCW, self.motor_speed)
-        self.clw_pwm.ChangeDutyCycle(50)
-        self.ccw_pwm.ChangeDutyCycle(50)
-
     def spi_init(self):
         # init SPI
         self.spi = spidev.SpiDev()
@@ -135,7 +129,7 @@ class Motorroller:
             int(pot3 / num_avg),
         ]
 
-    def move_motor(self, channel, direction, duration):
+    def move_motor(self, channel, direction, nsteps):
         # first read the potis
         pot0, pot1, pot2, pot3 = self.read_all_potis()
 
@@ -302,6 +296,13 @@ class Motorroller:
         self.clw_pwm.ChangeFrequency(self.motor_speed)
 
         if direction == "ccw":
+            
+            for i in range(nsteps):
+                ramp = 0.02/((i+1)*10)
+                if ramp < delay:
+                    ramp = delay
+
+            
             self.ccw_pwm.start(50)
             sleep(duration)
             self.ccw_pwm.stop()
