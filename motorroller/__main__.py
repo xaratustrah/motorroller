@@ -443,16 +443,16 @@ def validate_config(config):
     required_keys = [
         "general.minimum_delay",
         "mot0.limit_outside",
-        "mot0.limit_inside"
+        "mot0.limit_inside",
         "mot0.cal_points",
         "mot1.limit_outside",
-        "mot1.limit_inside"
+        "mot1.limit_inside",
         "mot1.cal_points",
         "mot2.limit_outside",
-        "mot2.limit_inside"
+        "mot2.limit_inside",
         "mot2.cal_points",
         "mot3.limit_outside",
-        "mot3.limit_inside"
+        "mot3.limit_inside",
         "mot3.cal_points",
     ]
     for key in required_keys:
@@ -509,7 +509,7 @@ def main():
         try:
             # Load calibration file
             with open(args.cal[0], "rb") as f:
-                cal_dic = toml.load(f)
+                cal_dic = toml.load(cal_dic)
             validate_config(cal_dic)
         except:
             logger.error('Calibration file does not have required format.')
