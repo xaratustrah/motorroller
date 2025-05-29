@@ -9,7 +9,7 @@ import argparse
 import os
 import sys
 from loguru import logger
-import tomllib
+import toml
 from .version import __version__
 
 if os.name == "posix" and os.uname().machine == "armv7l":
@@ -509,7 +509,7 @@ def main():
         try:
             # Load calibration file
             with open(args.cal[0], "rb") as f:
-                cal_dic = tomllib.load(f)
+                cal_dic = toml.load(f)
             validate_config(cal_dic)
         except:
             logger.error('Calibration file does not have required format.')
