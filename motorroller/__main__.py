@@ -439,6 +439,30 @@ def start_server_mode():
     logger.error("Client / Server mode not implemented yet.")
 
 
+def validate_config(config):
+    required_keys = [
+        "general.minimum_delay",
+        "mot0.limit_outside",
+        "mot0.limit_inside"
+        "mot0.cal_points",
+        "mot1.limit_outside",
+        "mot1.limit_inside"
+        "mot1.cal_points",
+        "mot2.limit_outside",
+        "mot2.limit_inside"
+        "mot2.cal_points",
+        "mot3.limit_outside",
+        "mot3.limit_inside"
+        "mot3.cal_points",
+    ]
+    for key in required_keys:
+        keys = key.split(".")
+        conf = config
+        for k in keys:
+            if k not in conf:
+                raise ValueError(f"Missing required key: {key}")
+            conf = conf[k]
+
 # -------
 
 
@@ -486,11 +510,7 @@ def main():
             # Load calibration file
             with open(args.cal[0], "rb") as f:
                 cal_dic = tomllib.load(f)
-            # check structure of calibration file
-            for key in ['mot0', 'mot1', 'mot2', 'mot3']:
-                assert key in cal_dic.keys()
-                for keykey in ['limit_outside', 'limit_inside', 'cal_points']:
-                    assert keykey in cal_dic[key].keys()
+            validate_config(cal_dic)
         except:
             logger.error('Calibration file does not have required format.')
             exit()
