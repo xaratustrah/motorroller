@@ -497,8 +497,9 @@ def main():
         logger.success("Calibration file is good.")
     else:
         logger.warning(
-            "No calibration file provided, so limits are unknown. Proceed with caution!"
+            "No calibration file provided. Aborting..."
         )
+        exit()
 
     # ready to go
     motorroller = Motorroller(cal_dic)
