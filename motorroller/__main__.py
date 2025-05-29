@@ -6,7 +6,8 @@ Motorroller - Open hardware open software stepper motor controller
 
 from time import sleep
 import argparse
-import os, sys
+import os
+import sys
 from loguru import logger
 import tomllib
 from .version import __version__
@@ -34,11 +35,8 @@ BRK3 = 33
 MOTOR_SELECT = 36
 DRIVER_SELECT = 38
 
-MINIMUM_DELAY = 0.0002
-
 class Motorroller:
-    def __init__(self, motor_speed, calibration_dic):
-        self.motor_speed = motor_speed
+    def __init__(self, calibration_dic):
         self.brk_list = [BRK0, BRK1, BRK2, BRK3]
         self.spi_init()
         self.gpio_setup()
@@ -296,8 +294,8 @@ class Motorroller:
             
             for i in range(nsteps):
                 ramp = 0.02/((i+1)*10)
-                if ramp < MINIMUM_DELAY:
-                    ramp = MINIMUM_DELAY
+                if ramp < self.calibration_dic["general"]["minimum_delay"]:
+                    ramp = self.calibration_dic["general"]["minimum_delay"]
                 gpio.output(CCW, gpio.HIGH)
                 sleep(ramp)
                 gpio.output(CCW, gpio.LOW)
@@ -305,8 +303,8 @@ class Motorroller:
         else:
             for i in range(nsteps):
                 ramp = 0.02/((i+1)*10)
-                if ramp < MINIMUM_DELAY:
-                    ramp = MINIMUM_DELAY
+                if ramp < self.calibration_dic["general"]["minimum_delay"]:
+                    ramp = self.calibration_dic["general"]["minimum_delay"]
                 gpio.output(CLW, gpio.HIGH)
                 sleep(ramp)
                 gpio.output(CLW, gpio.LOW)
@@ -463,15 +461,6 @@ def main():
         "-v", "--version", action="version", version=__version__, help="Print version."
     )
     parser.add_argument(
-        "-s",
-        "--speed",
-        nargs="?",
-        type=int,
-        const=200,
-        default=200,
-        help="Motor speed.",
-    )
-    parser.add_argument(
         "-l", "--log", nargs=1, type=str, help="Path and name of the log file."
     )
 
@@ -488,10 +477,6 @@ def main():
     # logger.patch(lambda record: record.update(name=record["file"].name))
 
     args = parser.parse_args()
-    speed = args.speed
-    if speed > 1200:
-        logger.info(f"Given speed {speed} is not so secure. Limitting to 1200.")
-        speed = 1200
 
     # read config file
     cal_dic = None
@@ -516,7 +501,7 @@ def main():
         )
 
     # ready to go
-    motorroller = Motorroller(speed, cal_dic)
+    motorroller = Motorroller(cal_dic)
 
     if args.log:
         outfilename = args.log[0]

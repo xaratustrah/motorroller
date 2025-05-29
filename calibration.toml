@@ -1,4 +1,7 @@
-# Config and calibration file for motors
+# Configuration and calibration file for Motorroller
+
+[general]
+minimum_delay = 0.0002
 
 [mot0]
 limit_outside = 30
