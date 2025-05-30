@@ -69,7 +69,7 @@ pip3 uninstall --break-system-packages motorroller
 
 `motorroller` can be run in two different modes (the third client/server mode has not been implemented at this stage). It accepts commands in interactive and command line mode. During movement, pressing `ctrl-C` will stop the movement and exit gracefully.
 
-*NOTE:* during any operation, in case of crash due to any reasons, make sure to re-run the code and close down properly, in order to make sure that system is gracefully shut down.
+**NOTE:** during any operation, in case of crash due to any reasons, make sure to re-run the code and close down properly, in order to make sure that system is gracefully shut down. This is specially important because of the magnetic break of the motors. The code makes sure that they are gently released after each operation. In case of an unexpected crash it might happen that this gentle close down is not accomplished. So by re-running the code and gently closing again, this will be guaranteed.
 
 
 #### Interactive mode
@@ -115,11 +115,13 @@ Z is the number of steps (int)
 
 For example `0i200` means move motor 0 inside 200 steps.
 
-*Special case of command 9:*
+**Special case of command 9:**
 
 Command 9 is just a reader, which means it does not matter what arguments are given, it will always read out the position potentiometers. So in the case of command 9, the only significant value is the number 9 itself, meaning that all other combinations are ignored.
 
-For example: 9i0 is the same as 9o56879 and so on.
+For example the command `9i0` is the same as `9o56879` and so on.
+
+**NOTE:** all commands are case insensitive, i.e. `i`and `I` are equal, same applies to `o`and `O`.
 
 
 
@@ -172,11 +174,11 @@ limit_inside = 70
 cal_points = [[90, 877], [10, 3039]]
 ```
 
-*NOTE:* Calibration point format is [mm, ADC value]. For calibration points, within each pair, please use either floats or integers, TOML format does not allow mixing. As you know the ADC values are always integers, but position values can be floats. If you choose to have a position value that is a float, then you might need to indicate the ADC value also as a float, with ".0" at the end.
+**NOTE:** Calibration point format is [mm, ADC value]. For calibration points, within each pair, please use either floats or integers, TOML format does not allow mixing. As you know the ADC values are always integers, but position values can be floats. If you choose to have a position value that is a float, then you might need to indicate the ADC value also as a float, with ".0" at the end.
 
 For example allowed values: `[90, 831]` or something like `[90.5, 831.0]` but not allowed: `[90.5, 831]`
 
-*NOTE:* Please note that in the current hardware configuration, as motors move inside:
+**NOTE:** Please note that in the current hardware configuration, as motors move inside:
 
 * values in mm increase
 * ADC values decrease
